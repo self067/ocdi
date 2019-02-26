@@ -1,0 +1,2 @@
+2019-02-25 17:32:16 - PHP Notice:  Undefined variable: feedback in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 109
+2019-02-25 18:33:57 - PHP Warning:  Cannot assign an empty string to a string offset in C:\Apache24\htdocs\ocdi\system\config\revslider\inc_php\framework\functions.class.php on line 527
