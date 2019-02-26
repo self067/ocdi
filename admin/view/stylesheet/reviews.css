@@ -1,0 +1,191 @@
+
+/* Generic styles */
+
+body *
+{
+    box-sizing: border-box;
+}
+
+.clearfix
+{
+	clear: both;
+}
+
+.version
+{
+	display: block;
+    line-height: 16px;
+    padding-left: 20px;
+}
+
+.version.latest
+{
+	color: #479401;
+}
+
+.version.update
+{
+	color: #ca3510;
+}
+
+table.form
+{
+    margin-bottom: 0;
+}
+    
+.copyright
+{
+	background: #1e91cf;
+	color: #ffffff;
+	font-size: 125%;
+	padding: 10px;
+	border-color: #1978ab;
+	border-radius: 3px;
+	margin-top: 20px;
+}
+
+.copyright a
+{
+	color: #fffc00;
+}
+
+td .checkbox-select
+{
+	margin-top: 10px;
+}
+
+.checkbox-select a
+{
+	cursor: pointer;
+}
+
+.radio-inline input[type='radio']
+{
+    line-height: 24px;
+    float: left;
+    margin-right: 5px;
+    margin-top: 1px;
+}
+
+.form-horizontal .control-label
+{
+    text-align: left;
+    padding-left: 20px;
+    font-size: 110%;
+    font-weight: normal;
+}
+
+.settings-title
+{
+    margin: 20px 0;
+}
+
+.scrollbox,
+td select,
+td input[type="text"]
+{
+    width: 100%;
+    margin: 0;
+    text-align: left;
+}
+
+input[type="radio"]
+{
+    margin-right: 5px !important;
+}
+
+.form-group input[type="checkbox"]
+{
+    margin: 12px 0 0 0;
+    padding: 0;
+}
+
+.form-group .well input[type="checkbox"]
+{
+    float: left;
+    margin: 2px 0 0 -20px;
+}
+
+.scrollbox > div
+{
+    overflow: hidden;
+}
+
+.scrollbox
+{
+	height: 150px;
+}
+
+.table thead td span[data-toggle="tooltip"]::after,
+label.control-label span::after
+{
+    cursor: pointer;
+}
+
+.input-text
+{
+    display: block;
+    float: left;
+    line-height: 100%;
+    padding-top: 9px;
+}
+
+#input-cron-link span
+{
+    display: block;
+    line-height: 125%;
+    cursor: pointer;
+}
+
+#input-cron-link .cron-wget
+{
+    opacity: 0.4;
+}
+
+#input-cron-link .cron-wget:hover
+{
+    opacity: 1;
+}
+
+.autocomplete .fa-minus-circle
+{
+    cursor: pointer;
+}
+
+.notice
+{
+	margin: 15px 5px;
+	display: block;
+}
+
+ul.multifield
+{
+	margin-bottom: 0;
+}
+
+ul.multifield > li.active > a,
+ul.multifield > li.active > a:hover,
+ul.multifield > li.active > a:active,
+ul.multifield > li.active > a:focus
+{
+	background-color: #fafafa;
+}
+
+div.multifield
+{
+	background-color: #fafafa;
+	border: 1px solid #ddd;
+	border-top: none;
+	padding-top: 25px;
+}
+
+.form-horizontal .multifield .form-group
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.note-editor
+{
+	background-color: #ffffff;
+}

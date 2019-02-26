@@ -90,6 +90,14 @@ class ControllerCommonHeader extends Controller {
 		$data['contact'] = $this->url->link('information/contact');
 		$data['telephone'] = $this->config->get('config_telephone');
 
+/////////////////////////////////////////		
+		$data['about'] = $this->url->link('pages/about', '', true);
+		$data['service'] = $this->url->link('pages/service', '', true);
+    
+		$data['page404'] = $this->url->link('error/not_found', '', true);
+
+/////////////////////////////////////////		
+
 		// Menu
 		$this->load->model('catalog/category');
 
@@ -127,6 +135,7 @@ class ControllerCommonHeader extends Controller {
 				);
 			}
 		}
+
 
 		$data['language'] = $this->load->controller('common/language');
 		$data['currency'] = $this->load->controller('common/currency');

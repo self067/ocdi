@@ -87,6 +87,18 @@
 </head>
 <body class="<?php echo $class; ?>">
 
+<?php 
+  $path = "common/home";
+  $url = $_SERVER['REQUEST_URI'];
+  if ($url == "/" or strripos($url, $path)) {
+    $is_home = true;
+  }else{
+    $is_home = false;
+  }            
+?>
+
+
+
 <div class="header-outs" id="home">
          <div class="header-bar">
             <div class="info-top-grid">
@@ -104,7 +116,8 @@
                      </li>
                   </ul>
                </div>
-            </div>
+						</div>
+						
             <div class="container-fluid">
                <div class="hedder-up row">
                   <div class="col-lg-3 col-md-3 logo-head">
@@ -138,7 +151,8 @@
                      </div>
                   </div>
                </div>
-            </div>
+						</div>
+						
             <nav class="navbar navbar-expand-lg navbar-light">
                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                <span class="navbar-toggler-icon"></span>
@@ -149,13 +163,13 @@
                         <a class="nav-link" href="<?php echo $home; ?>">Home <span class="sr-only">(current)</span></a>
                      </li>
                      <li class="nav-item">
-                        <a href="about.html" class="nav-link">About</a>
+                        <a href="<?php echo $about; ?>" class="nav-link">About</a>
                      </li>
                      <li class="nav-item">
-                        <a href="service.html" class="nav-link">Service</a>
+                        <a href="<?php echo $service;?>" class="nav-link">Service</a>
                      </li>
                      <li class="nav-item">
-                        <a href="shop.html" class="nav-link">Shop Now</a>
+                        <a href="<?php echo $categories[0]['href']; ?>" class="nav-link">Shop Now</a>
                      </li>
                      <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -171,16 +185,42 @@
                         Product
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                           <a class="nav-link" href="product.html">Kids Toys</a>
-                           <a class="nav-link " href="product.html">Dolls</a>
-                           <a class="nav-link " href="product.html">Key Toys</a>
-                           <a class="nav-link " href="product.html">Boys Toys</a>
+													<?php foreach( $categories as $cat) { ?>
+														<a class="nav-link" href="<?php echo $cat['href'];?>">
+															<?php echo $cat['name'];?>
+														</a>
+													<?php } ?>
+												
+
                         </div>
                      </li>
                      <li class="nav-item">
-                        <a href="contact.html" class="nav-link">Contact</a>
+                        <a href="<?php echo $contact; ?>" class="nav-link">Contact</a>
                      </li>
                   </ul>
                </div>
             </nav>
          </div>
+
+
+				 <?php if (!$is_home) { ?>
+      <!-- banner -->
+      <div class="inner_page-banner one-img">
+      </div>
+      <!--//banner -->
+      <!-- short -->
+      <div class="using-border py-3">
+         <div class="inner_breadcrumb  ml-4">
+            <ul class="short_ls">
+               <li>
+                  <a href="index.html">Home</a>
+                  <span>/ /</span>
+               </li>
+               <li>Products</li>
+            </ul>
+         </div>
+      </div>
+      <!-- //short-->
+	
+		<?php } ?>
+

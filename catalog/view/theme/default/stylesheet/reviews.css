@@ -1,0 +1,13 @@
+.review
+{
+	border-top: 1px solid #dddddd;
+	margin: 20px 0 20px 0;
+	padding-top: 10px;
+}
+
+.review .review-meta
+{
+	padding-top: 10px;
+	font-size: 85%;
+	font-style: italic;
+}

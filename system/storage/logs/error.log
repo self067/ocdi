@@ -1,2 +1,15 @@
 2019-02-25 17:32:16 - PHP Notice:  Undefined variable: feedback in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 109
 2019-02-25 18:33:57 - PHP Warning:  Cannot assign an empty string to a string offset in C:\Apache24\htdocs\ocdi\system\config\revslider\inc_php\framework\functions.class.php on line 527
+2019-02-26 17:49:44 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 17:54:08 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 17:54:12 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 17:54:17 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 17:54:48 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 17:55:52 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 17:56:18 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 17:59:47 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 17:59:55 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 18:15:12 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 18:15:21 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 18:16:41 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-26 18:16:48 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
