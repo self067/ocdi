@@ -1,0 +1,9 @@
+.vscode/
+.git/
+.vscode/ftp-kr.sync.cache.json
+.vscode/ftp-kr.json
+.vscode/sftp.json
+config.php
+admin/config.php
+system/storage/cache/
+ 
