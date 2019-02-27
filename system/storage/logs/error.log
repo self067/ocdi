@@ -14,3 +14,30 @@
 2019-02-26 18:16:41 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
 2019-02-26 18:16:48 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
 2019-02-27 14:56:07 - PHP Notice:  Undefined variable: class in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 205
+2019-02-27 17:01:20 - PHP Notice:  Undefined variable: class in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 205
+2019-02-27 17:48:46 - PHP Notice:  Undefined variable: class in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 205
+2019-02-27 18:10:06 - PHP Notice:  Undefined variable: class in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 205
+2019-02-27 18:25:58 - PHP Notice:  Undefined variable: class in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 204
+2019-02-27 19:54:29 - PHP Warning:  mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\Apache24\htdocs\ocdi\system\library\mail.php on line 158
+2019-02-27 19:59:55 - PHP Notice:  Undefined index: name in C:\Apache24\htdocs\ocdi\catalog\controller\information\contact.php on line 163
+2019-02-27 19:59:55 - PHP Notice:  Undefined index: email in C:\Apache24\htdocs\ocdi\catalog\controller\information\contact.php on line 167
+2019-02-27 19:59:55 - PHP Notice:  Undefined index: enquiry in C:\Apache24\htdocs\ocdi\catalog\controller\information\contact.php on line 171
+2019-02-27 20:09:59 - PHP Notice:  Undefined index: name in C:\Apache24\htdocs\ocdi\catalog\controller\information\contact.php on line 163
+2019-02-27 20:09:59 - PHP Notice:  Undefined index: email in C:\Apache24\htdocs\ocdi\catalog\controller\information\contact.php on line 167
+2019-02-27 20:09:59 - PHP Notice:  Undefined index: enquiry in C:\Apache24\htdocs\ocdi\catalog\controller\information\contact.php on line 171
+2019-02-27 20:09:59 - PHP Notice:  Undefined variable: phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 30
+2019-02-27 20:09:59 - PHP Notice:  Undefined variable: error_phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 31
+2019-02-27 20:10:11 - PHP Notice:  Undefined index: name in C:\Apache24\htdocs\ocdi\catalog\controller\information\contact.php on line 163
+2019-02-27 20:10:11 - PHP Notice:  Undefined index: email in C:\Apache24\htdocs\ocdi\catalog\controller\information\contact.php on line 167
+2019-02-27 20:10:11 - PHP Notice:  Undefined index: enquiry in C:\Apache24\htdocs\ocdi\catalog\controller\information\contact.php on line 171
+2019-02-27 20:10:11 - PHP Notice:  Undefined variable: phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 30
+2019-02-27 20:10:11 - PHP Notice:  Undefined variable: error_phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 31
+2019-02-27 20:10:33 - PHP Notice:  Undefined variable: phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 30
+2019-02-27 20:10:33 - PHP Notice:  Undefined variable: error_phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 31
+2019-02-27 20:11:54 - PHP Notice:  Undefined variable: phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 30
+2019-02-27 20:11:54 - PHP Notice:  Undefined variable: error_phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 31
+2019-02-27 20:12:02 - PHP Warning:  mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\Apache24\htdocs\ocdi\system\library\mail.php on line 158
+2019-02-27 20:26:25 - PHP Notice:  Undefined variable: phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 30
+2019-02-27 20:26:25 - PHP Notice:  Undefined variable: error_phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 31
+2019-02-27 20:27:19 - PHP Notice:  Undefined variable: phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 30
+2019-02-27 20:29:07 - PHP Warning:  mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\Apache24\htdocs\ocdi\system\library\mail.php on line 158

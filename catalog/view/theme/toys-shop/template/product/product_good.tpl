@@ -8,56 +8,35 @@
                   <div class="col-lg-4 single-right-left ">
                      <div class="grid images_3_of_2">
                         <div class="flexslider1">
-                          <ul class="slides">
-														
-														<li data-thumb="<?php echo $thumb; ?>">
-                                 <div class="thumb-image"> <img src="<?php echo $thumb; ?>" data-imagezoom="true" class="img-fluid" alt=" "> </div>
-														</li>
-
-														<?php foreach ($images as $image) { ?>
-                              <li data-thumb="<?php echo $image['thumb']; ?>">
-                                 <div class="thumb-image"> <img src="<?php echo $image['thumb']; ?>" data-imagezoom="true" class="img-fluid" alt=" "> </div>
-															</li>
-														<?php } ?>
-
-                          </ul>
-                          <div class="clearfix"></div>
+                           <ul class="slides">
+                              <li data-thumb="catalog/view/theme/toys-shop/images/f2.jpg">
+                                 <div class="thumb-image"> <img src="catalog/view/theme/toys-shop/images/f2.jpg" data-imagezoom="true" class="img-fluid" alt=" "> </div>
+                              </li>
+                              <li data-thumb="catalog/view/theme/toys-shop/images/f1.jpg">
+                                 <div class="thumb-image"> <img src="catalog/view/theme/toys-shop/images/f1.jpg" data-imagezoom="true" class="img-fluid" alt=" "> </div>
+                              </li>
+                              <li data-thumb="catalog/view/theme/toys-shop/images/f3.jpg">
+                                 <div class="thumb-image"> <img src="catalog/view/theme/toys-shop/images/f3.jpg" data-imagezoom="true" class="img-fluid" alt=" "> </div>
+                              </li>
+                           </ul>
+                           <div class="clearfix"></div>
                         </div>
                      </div>
                   </div>
                   <div class="col-lg-8 single-right-left simpleCart_shelfItem">
-                     <h3><?php echo $heading_title; ?></h3>
-
-										 <?php if (!$special) { ?>
-											<p><span class="item_price"><?php echo $price; ?></span>
-                        <!-- <del>$1,199</del> -->
-	                    </p>
-										<?php } else { ?>
-											<p><span class="item_price"><?php echo $price; ?></span>
-                        <del><?php echo $special; ?></del>
-                     	</p>
-										<?php } ?>
-
-
-
+                     <h3>Soft Teddy Bear (Brown)</h3>
+                     <p><span class="item_price">$650</span>
+                        <del>$1,199</del>
+                     </p>
                      <div class="rating1">
-										 <!-- <label class="control-label"><?php echo $entry_rating; ?></label> -->
-										 <?php if ($review_status) { ?>
-
                         <ul class="stars">
-												<?php for ($i = 1; $i <= 5; $i++) { ?>
-													<?php if ($rating < $i) { ?>
-														<li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a></li>
-													<?php } else { ?>
-													 <li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i></a></li>
+                           <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                           <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                           <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                           <li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i></a></li>
                            <li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a></li>
-													<?php } ?>
-													<?php } ?>
                         </ul>
-												<?php } ?>
                      </div>
-
-
                      <div class="description">
                         <h5>Check delivery, payment options and charges at your location</h5>
                         <form action="#" method="post">
@@ -95,7 +74,7 @@
                               <input type="hidden" name="cmd" value="_cart">
                               <input type="hidden" name="add" value="1">
                               <input type="hidden" name="toys_item" value="Farenheit">
-                              <input type="hidden" name="amount" value="<?php echo $price; ?>">
+                              <input type="hidden" name="amount" value="575.00">
                               <button type="submit" class="toys-cart ptoys-cart add">
                               Add to Cart
                               </button>
@@ -136,7 +115,7 @@
                                  <div class="bootstrap-tab-text-grids">
                                     <div class="bootstrap-tab-text-grid">
                                        <div class="bootstrap-tab-text-grid-left">
-                                          <img src="images/team1.jpg" alt=" " class="img-fluid">
+                                          <img src="catalog/view/theme/toys-shop/images/team1.jpg" alt=" " class="img-fluid">
                                        </div>
                                        <div class="bootstrap-tab-text-grid-right">
                                           <ul>
@@ -190,12 +169,13 @@
                </div>
             </div>
          </div>
-      </section>
+			</section>
+
 			
 
 
 
 
-
+			
 <?php echo $footer; ?>
 

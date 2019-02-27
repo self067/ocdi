@@ -171,6 +171,65 @@
          });
       </script>
       <!-- //slider flexisel -->
+
+      <!-- price range (top products) -->
+      <script src="catalog/view/theme/toys-shop/js/jquery-ui.js"></script>
+      <script>
+         //<![CDATA[ 
+         $(window).load(function () {
+         	$("#slider-range").slider({
+         		range: true,
+         		min: 0,
+         		max: 9000,
+         		values: [50, 6000],
+         		slide: function (event, ui) {
+         			$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+         		}
+         	});
+         	$("#amount").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
+         
+         }); //]]>
+      </script>
+      <!-- //price range (top products) -->
+      <!-- single -->
+      <script src="catalog/view/theme/toys-shop/js/imagezoom.js"></script>
+      <!-- single -->
+      <!-- script for responsive tabs -->
+      <script src="catalog/view/theme/toys-shop/js/easy-responsive-tabs.js"></script>
+      <script>
+         $(document).ready(function () {
+         	$('#horizontalTab').easyResponsiveTabs({
+         		type: 'default', //Types: default, vertical, accordion           
+         		width: 'auto', //auto or any width like 600px
+         		fit: true, // 100% fit in a container
+         		closed: 'accordion', // Start closed if in accordion view
+         		activate: function (event) { // Callback function if tab is switched
+         			var $tab = $(this);
+         			var $info = $('#tabInfo');
+         			var $name = $('span', $info);
+         			$name.text($tab.text());
+         			$info.show();
+         		}
+         	});
+         	$('#verticalTab').easyResponsiveTabs({
+         		type: 'vertical',
+         		width: 'auto',
+         		fit: true
+         	});
+         });
+      </script>
+      <!-- FlexSlider -->
+      <script src="catalog/view/theme/toys-shop/js/jquery.flexslider.js"></script>
+      <script>
+         // Can also be used with $(document).ready()
+         $(window).load(function () {
+         	$('.flexslider1').flexslider({
+         		animation: "slide",
+         		controlNav: "thumbnails"
+         	});
+         });
+      </script>
+      <!-- //FlexSlider-->
       <!-- start-smoth-scrolling -->
       <script src="catalog/view/theme/toys-shop/js/move-top.js"></script>
       <script src="catalog/view/theme/toys-shop/js/easing.js"></script>
@@ -195,6 +254,8 @@
          		scrollSpeed: 1200,
          		easingType: 'linear'
          	};
+         
+         
          	$().UItoTop({
          		easingType: 'easeOutQuart'
          	});
@@ -202,8 +263,9 @@
          });
       </script>
       <!-- //here ends scrolling icon -->
+      <!-- //smooth-scrolling-of-move-up -->
       <!--bootstrap working-->
       <script src="catalog/view/theme/toys-shop/js/bootstrap.min.js"></script>
-      <!-- //bootstrap working-->
+      <!-- //bootstrap working--> 
    </body>
 </html>

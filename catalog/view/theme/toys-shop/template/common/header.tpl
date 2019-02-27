@@ -49,6 +49,12 @@
 	<!--Shoping cart-->
 	<link rel="stylesheet" href="catalog/view/theme/toys-shop/css/shop.css" type="text/css" />
 	<!--//Shoping cart-->
+
+	<link rel="stylesheet" type="text/css" href="catalog/view/theme/toys-shop/css/jquery-ui1.css">
+  <link href="catalog/view/theme/toys-shop/css/easy-responsive-tabs.css" rel='stylesheet' type='text/css' />
+  <link rel="stylesheet" href="catalog/view/theme/toys-shop/css/flexslider.css" type="text/css" media="screen" />
+
+	<!--//Shoping cart-->
 	<!--stylesheets-->
 	<link href="catalog/view/theme/toys-shop/css/style.css" rel='stylesheet' type='text/css' media="all">
 	<!--//stylesheets-->
