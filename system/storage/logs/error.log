@@ -13,3 +13,4 @@
 2019-02-26 18:15:21 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
 2019-02-26 18:16:41 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
 2019-02-26 18:16:48 - PHP Notice:  Undefined variable: information in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\common\header.tpl on line 169
+2019-02-27 14:56:07 - PHP Notice:  Undefined variable: class in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 205
