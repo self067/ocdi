@@ -32,7 +32,7 @@
 <meta property="og:site_name" content="<?php echo $name; ?>" />
 
 
-<!-- <script src='catalog/view/theme/toys-shop/js/jquery-2.2.3.min.js'></script> -->
+<script src='catalog/view/theme/toys-shop/js/jquery-2.2.3.min.js'></script>
 
 <!-- ??????????? -->
 <!-- <link href="catalog/view/theme/toys-shop/css/stylesheet.css" rel="stylesheet"> -->
@@ -65,7 +65,7 @@
 <?php foreach ($styles as $style) { ?>
 <link href="<?php echo $style['href']; ?>" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
-<script src="catalog/view/javascript/common.js" type="text/javascript"></script>
+<script src="catalog/view/theme/toys-shop/js/common.js" type="text/javascript"></script>
 <?php foreach ($links as $link) { ?>
 <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
 <?php } ?>
@@ -102,8 +102,6 @@
     $is_home = false;
   }            
 ?>
-
-
 
 <div class="header-outs" id="home">
          <div class="header-bar">
@@ -151,6 +149,9 @@
                                  <button class="top_toys_cart" type="submit" name="submit" value="">
                                  <span class="fas fa-cart-arrow-down"></span>
                                  </button>
+
+        													<!-- <a href="<?php echo $shopping_cart; ?>" > </a> -->
+
                               </form>
                            </li>
                         </ul>

@@ -56,14 +56,17 @@
                                        
                                     </div>
                                     <div class="toys single-item hvr-outline-out">
-                                       <form action="#" method="post">
+
+																		<form action="#" method="post">
                                           <input type="hidden" name="cmd" value="_cart">
                                           <input type="hidden" name="add" value="1">
                                           <input type="hidden" name="toys_item" value="<?php echo $product['name']; ?>">
                                           <input type="hidden" name="amount" value="<?php echo $product['price']; ?>">
-                                          <button type="submit" class="toys-cart ptoys-cart">
+
+																					<button type="button" class="toys-cart ptoys-cart button-cart" onclick="cart.add('<?php echo $product['product_id']; ?>');">
                                           <i class="fas fa-cart-plus"></i>
-                                          </button>
+																					<span class="hidden-xs hidden-sm hidden-md"></span></button>
+
                                        </form>
                                     </div>
                                  </div>
@@ -125,74 +128,8 @@ $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 	});
 });
 //--></script>
+
 <script type="text/javascript"><!--
-$('#button-cart').on('click', function() {
-	$.ajax({
-		url: 'index.php?route=checkout/cart/add',
-		type: 'post',
-		data: $('#product input[type=\'text\'], #product input[type=\'number\'], #product input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea'),
-		dataType: 'json',
-		beforeSend: function() {
-			$('#button-cart').button('loading');
-		},
-		complete: function() {
-			$('#button-cart').button('reset');
-		},
-		success: function(json) {
-			$('.alert, .text-danger').remove();
-			$('.form-group').removeClass('has-error');
-
-			if (json['error']) {
-				if (json['error']['option']) {
-					for (i in json['error']['option']) {
-						var element = $('#input-option' + i.replace('_', '-'));
-
-						if (element.parent().hasClass('input-group')) {
-							element.parent().after('<div class="text-danger">' + json['error']['option'][i] + '</div>');
-						} else {
-							element.after('<div class="text-danger">' + json['error']['option'][i] + '</div>');
-						}
-					}
-				}
-
-				if (json['error']['recurring']) {
-					$('select[name=\'recurring_id\']').after('<div class="text-danger">' + json['error']['recurring'] + '</div>');
-				}
-
-				// Highlight any found errors
-				$('.text-danger').parent().addClass('has-error');
-			}
-
-			if (json['success']) {
-				// $('.breadcrumb').after('<div class="alert alert-success">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
-
-				$('#cart-total').html( json['total']);
-
-				$('.modal-body').load('index.php?route=common/cart/info .modal-list');
-				$('#modalCart').modal();
-				// $('html, body').animate({ scrollTop: 0 }, 'slow');
-				// $('#cart > ul').load('index.php?route=common/cart/info ul li');
-			}
-		},
-        error: function(xhr, ajaxOptions, thrownError) {
-            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-        }
-	});
-});
-//--></script>
-<script type="text/javascript"><!--
-$('.date').datetimepicker({
-	pickTime: false
-});
-
-$('.datetime').datetimepicker({
-	pickDate: true,
-	pickTime: true
-});
-
-$('.time').datetimepicker({
-	pickDate: false
-});
 
 $('button[id^=\'button-upload\']').on('click', function() {
 	var node = this;
@@ -289,26 +226,7 @@ $('#button-review').on('click', function() {
 	});
 });
 
-$(document).ready(function() {
-	$('.thumbnails').magnificPopup({
-		type:'image',
-		delegate: 'a',
-		gallery: {
-			enabled:true
-		}
-	});
-});
 //--></script>
-
-<script type="text/javascript">
-$('#carousel_product').owlCarousel({
-	items: 3,
-	autoPlay: 3000,
-	navigation: true,
-	navigationText: ['<i class="fa fa-chevron-left fa-5x"></i>', '<i class="fa fa-chevron-right fa-5x"></i>'],
-	pagination: true
-});
-</script>
 
 
 

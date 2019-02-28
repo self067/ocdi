@@ -99,26 +99,116 @@
          </div>
       </div>
       <!-- //Modal 1-->
-      <!--js working-->
+
+			<!--js working-->
       <script src='catalog/view/theme/toys-shop/js/jquery-2.2.3.min.js'></script>
       <!--//js working-->
       <!-- cart-js -->
-      <script src="catalog/view/theme/toys-shop/js/minicart.js"></script>
+      <!-- <script src="catalog/view/theme/toys-shop/js/minicart.js"></script>
       <script>
          toys.render();
-         
          toys.cart.on('toys_checkout', function (evt) {
          	var items, len, i;
-         
          	if (this.subtotal() > 0) {
          		items = this.items();
-         
          		for (i = 0, len = items.length; i < len; i++) {}
          	}
          });
-      </script>
+      </script> -->
       <!-- //cart-js -->
-      <!--responsiveslides banner-->
+<!-- for product.tpl -->
+			<script type="text/javascript"><!--
+$('#button-cart').on('click', function() {
+	$.ajax({
+		url: 'index.php?route=checkout/cart/add',
+		type: 'post',
+		data: $('#product input[type=\'text\'], #product input[type=\'number\'], #product input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea'),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button-cart').button('loading');
+		},
+		complete: function() {
+			$('#button-cart').button('reset');
+		},
+		success: function(json) {
+
+			console.log('cart add success111');
+			console.log(json);
+
+			$('.alert, .text-danger').remove();
+			$('.form-group').removeClass('has-error');
+
+			if (json['error']) {
+				console.log('cart error ');
+				if (json['error']['option']) {
+					for (i in json['error']['option']) {
+						var element = $('#input-option' + i.replace('_', '-'));
+
+						if (element.parent().hasClass('input-group')) {
+							element.parent().after('<div class="text-danger">' + json['error']['option'][i] + '</div>');
+						} else {
+							element.after('<div class="text-danger">' + json['error']['option'][i] + '</div>');
+						}
+					}
+				}
+
+				if (json['error']['recurring']) {
+					$('select[name=\'recurring_id\']').after('<div class="text-danger">' + json['error']['recurring'] + '</div>');
+				}
+
+				// Highlight any found errors
+				$('.text-danger').parent().addClass('has-error');
+			}
+
+			console.log(json['success']);
+			if (json['success']) {
+				// console.log('cart add json- success');
+				// $('#cart-total').html( json['total']);
+				// var aa = $('.modal-body');
+				// console.log( 'modal-body ' + aa );
+				$('.modal-body').load('index.php?route=common/cart/info .modal-list');
+
+				// aa = $('#modalCart');
+				// console.log('modalCart ' + aa );
+				$('#modalCart').modal();
+				// aa =  $('staplesbmincart');
+				// console.log('staplesbmincart '  + aa);
+				$('staplesbmincart').modal();
+				$('html, body').animate({ scrollTop: 0 }, 'slow');
+				// $('#cart > ul').load('index.php?route=common/cart/info ul li');
+				console.log('cart add success22');
+
+			}
+		},
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+	});
+});
+//--></script>
+<script type="text/javascript"><!--
+$('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
+	$.ajax({
+		url: 'index.php?route=product/product/getRecurringDescription',
+		type: 'post',
+		data: $('input[name=\'product_id\'], input[name=\'quantity\'], select[name=\'recurring_id\']'),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#recurring-description').html('');
+		},
+		success: function(json) {
+			$('.alert, .text-danger').remove();
+
+			if (json['success']) {
+				$('#recurring-description').html(json['success']);
+			}
+		}
+	});
+});
+//--></script>
+
+
+			<!--responsiveslides banner-->
       <script src="catalog/view/theme/toys-shop/js/responsiveslides.min.js"></script>
       <script>
          // You can also use "$(window).load(function() {"

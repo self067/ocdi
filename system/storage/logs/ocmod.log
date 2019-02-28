@@ -1120,3 +1120,385 @@ FILE: catalog/model/tool/image.php
 CODE: public function resize($filename, $width, $height) {
 LINE: 18
 ----------------------------------------------------------------
+2019-02-28 16:49:04 - MOD: Modification Default
+
+FILE: system/engine/action.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 41
+
+FILE: system/engine/loader.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 49
+LINE: 108
+LINE: 120
+LINE: 165
+
+FILE: system/library/config.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 23
+
+FILE: system/library/language.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 38
+LINE: 40
+LINE: 49
+LINE: 51
+LINE: 60
+LINE: 62
+
+FILE: system/library/template/php.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 18
+
+FILE: system/library/template/tiwg.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 24
+
+FILE: system/library/template/twig.php
+NOT FOUND - OPERATIONS ABORTED!
+----------------------------------------------------------------
+MOD: fondy_payment
+
+FILE: catalog/controller/checkout/checkout.php
+CODE: public function index() {
+LINE: 11
+
+FILE: catalog/view/theme/default/template/checkout/checkout.tpl
+CODE: <h1><?php echo $heading_title; ?></h1>
+LINE: 26
+
+FILE: catalog/view/theme/toys-shop/template/checkout/checkout.tpl
+CODE: <h1><?php echo $heading_title; ?></h1>
+LINE: 26
+----------------------------------------------------------------
+MOD: OcStore 2.3.x track number
+
+FILE: admin/controller/sale/order.php
+CODE: $data['shipping_method'] = $order_info['shipping_method'];
+LINE: 567
+LINE: 942
+CODE: public function history() {
+LINE: 1545
+
+FILE: admin/model/sale/order.php
+CODE: $order_query->row['order_id'],
+LINE: 96
+
+FILE: catalog/model/checkout/order.php
+CODE: $order_query->row['order_id'],
+LINE: 170
+
+FILE: admin/view/template/sale/order_info.tpl
+CODE: <td><?php echo $text_reward; ?></td>
+LINE: 100
+CODE: <?php echo $footer; ?>
+LINE: 700
+
+FILE: catalog/model/account/order.php
+CODE: $order_query->row['order_id'],
+LINE: 46
+
+FILE: catalog/controller/account/order.php
+CODE: if ($order_info['invoice_no']) {
+LINE: 210
+
+FILE: catalog/view/theme/default/template/account/order_info.tpl
+CODE: <b><?php echo $text_shipping_method; ?></b> <?php echo $shipping_method; ?>
+LINE: 49
+----------------------------------------------------------------
+MOD: Local copy OCMOD by iSenseLabs
+
+FILE: admin/controller/extension/installer.php
+CODE: 'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/ftp', 'token=' . $this->session->data['token'],
+LINE: 131
+CODE: public function unzip() {
+LINE: 292
+----------------------------------------------------------------
+MOD: d_opencart_patch
+
+FILE: admin/controller/extension/extension/dashboard.php
+CODE: 'dashboard_' . $this->request->get['extension']
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->load->controller('extension/dashboard/' . $this->request->get['extension'] . '/uninstall');
+LINE: 48
+CODE: $this->model_extension_extension->uninstall('dashboard', $value);
+LINE: 94
+
+FILE: admin/controller/event/compatibility.php
+CODE: $route = $part[1] . '/' . $part[2];
+LINE: 9
+LINE: 20
+
+FILE: admin/controller/extension/extension/feed.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/feed/' . $this->request->get['extension']);
+LINE: 28
+
+FILE: admin/controller/extension/extension/fraud.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/fraud/' . $this->request->get['extension']);
+LINE: 28
+
+FILE: admin/controller/extension/extension/module.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/module/' . $this->request->get['extension']);
+LINE: 34
+CODE: $data['extensions'][] = array(
+LINE: 180
+
+FILE: admin/controller/extension/extension/payment.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/payment/' . $this->request->get['extension']);
+LINE: 28
+
+FILE: admin/controller/extension/extension/shipping.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/shipping/' . $this->request->get['extension']);
+LINE: 28
+
+FILE: admin/controller/extension/extension/theme.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/theme/' . $this->request->get['extension']);
+LINE: 29
+
+FILE: admin/controller/extension/extension/total.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/total/' . $this->request->get['extension']);
+LINE: 29
+
+FILE: catalog/controller/event/compatibility.php
+CODE: $route = $part[1] . '/' . $part[2];
+LINE: 27
+LINE: 37
+LINE: 55
+
+FILE: system/library/cart/user.php
+CODE: return in_array($value, $this->permission[$key]);
+LINE: 72
+
+FILE: system/config/catalog.php
+CODE: $_['action_event'] = array(
+LINE: 61
+CODE: class ControllerEventCompatibility extends Controller {
+LINE: 5
+CODE: public function view(&$route, &$data) {
+LINE: 40
+
+FILE: admin/model/localisation/language.php
+CODE: $this->db->query("DELETE FROM " . DB_PREFIX . "banner_image_description WHERE language_id = '" . (int)$language_id . "'");
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: admin/view/template/extension/extension/analytics.tpl
+CODE: <?php } ?>
+LINE: 32
+CODE: <?php } else { ?>
+LINE: 48
+
+FILE: admin/controller/user/user_permission.php
+CODE: $path[] = $file . '/*';
+LINE: 369
+CODE: $permission = substr($controller, 0, strrpos($controller, '.'));
+LINE: 387
+CODE: $modification_info = $this->model_extension_modification->getModificationByCode($code);
+LINE: 533
+
+FILE: admin/controller/common/filemanager.php
+CODE: $files = glob($directory . '/' . $filter_name . '*.{jpg,jpeg,png,gif,JPG,JPEG,PNG,GIF}', GLOB_BRACE);
+LINE: 72
+CODE: 'jpg',
+LINE: 304
+CODE: 'image/jpeg',
+LINE: 317
+
+FILE: admin/model/tool/image.php
+CODE: public function resize($filename, $width, $height) {
+LINE: 18
+
+FILE: catalog/model/tool/image.php
+CODE: public function resize($filename, $width, $height) {
+LINE: 18
+----------------------------------------------------------------
+2019-02-28 19:43:12 - MOD: Modification Default
+
+FILE: system/engine/action.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 41
+
+FILE: system/engine/loader.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 49
+LINE: 108
+LINE: 120
+LINE: 165
+
+FILE: system/library/config.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 23
+
+FILE: system/library/language.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 38
+LINE: 40
+LINE: 49
+LINE: 51
+LINE: 60
+LINE: 62
+
+FILE: system/library/template/php.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 18
+
+FILE: system/library/template/tiwg.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 24
+
+FILE: system/library/template/twig.php
+NOT FOUND - OPERATIONS ABORTED!
+----------------------------------------------------------------
+MOD: fondy_payment
+
+FILE: catalog/controller/checkout/checkout.php
+CODE: public function index() {
+LINE: 11
+
+FILE: catalog/view/theme/default/template/checkout/checkout.tpl
+CODE: <h1><?php echo $heading_title; ?></h1>
+LINE: 26
+
+FILE: catalog/view/theme/toys-shop/template/checkout/checkout.tpl
+CODE: <h1><?php echo $heading_title; ?></h1>
+LINE: 26
+----------------------------------------------------------------
+MOD: OcStore 2.3.x track number
+
+FILE: admin/controller/sale/order.php
+CODE: $data['shipping_method'] = $order_info['shipping_method'];
+LINE: 567
+LINE: 942
+CODE: public function history() {
+LINE: 1545
+
+FILE: admin/model/sale/order.php
+CODE: $order_query->row['order_id'],
+LINE: 96
+
+FILE: catalog/model/checkout/order.php
+CODE: $order_query->row['order_id'],
+LINE: 170
+
+FILE: admin/view/template/sale/order_info.tpl
+CODE: <td><?php echo $text_reward; ?></td>
+LINE: 100
+CODE: <?php echo $footer; ?>
+LINE: 700
+
+FILE: catalog/model/account/order.php
+CODE: $order_query->row['order_id'],
+LINE: 46
+
+FILE: catalog/controller/account/order.php
+CODE: if ($order_info['invoice_no']) {
+LINE: 210
+
+FILE: catalog/view/theme/default/template/account/order_info.tpl
+CODE: <b><?php echo $text_shipping_method; ?></b> <?php echo $shipping_method; ?>
+LINE: 49
+----------------------------------------------------------------
+MOD: Local copy OCMOD by iSenseLabs
+
+FILE: admin/controller/extension/installer.php
+CODE: 'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/ftp', 'token=' . $this->session->data['token'],
+LINE: 131
+CODE: public function unzip() {
+LINE: 292
+----------------------------------------------------------------
+MOD: d_opencart_patch
+
+FILE: admin/controller/extension/extension/dashboard.php
+CODE: 'dashboard_' . $this->request->get['extension']
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->load->controller('extension/dashboard/' . $this->request->get['extension'] . '/uninstall');
+LINE: 48
+CODE: $this->model_extension_extension->uninstall('dashboard', $value);
+LINE: 94
+
+FILE: admin/controller/event/compatibility.php
+CODE: $route = $part[1] . '/' . $part[2];
+LINE: 9
+LINE: 20
+
+FILE: admin/controller/extension/extension/feed.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/feed/' . $this->request->get['extension']);
+LINE: 28
+
+FILE: admin/controller/extension/extension/fraud.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/fraud/' . $this->request->get['extension']);
+LINE: 28
+
+FILE: admin/controller/extension/extension/module.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/module/' . $this->request->get['extension']);
+LINE: 34
+CODE: $data['extensions'][] = array(
+LINE: 180
+
+FILE: admin/controller/extension/extension/payment.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/payment/' . $this->request->get['extension']);
+LINE: 28
+
+FILE: admin/controller/extension/extension/shipping.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/shipping/' . $this->request->get['extension']);
+LINE: 28
+
+FILE: admin/controller/extension/extension/theme.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/theme/' . $this->request->get['extension']);
+LINE: 29
+
+FILE: admin/controller/extension/extension/total.php
+CODE: $this->model_user_user_group->addPermission($this->user->getGroupId(), 'modify', 'extension/total/' . $this->request->get['extension']);
+LINE: 29
+
+FILE: catalog/controller/event/compatibility.php
+CODE: $route = $part[1] . '/' . $part[2];
+LINE: 27
+LINE: 37
+LINE: 55
+
+FILE: system/library/cart/user.php
+CODE: return in_array($value, $this->permission[$key]);
+LINE: 72
+
+FILE: system/config/catalog.php
+CODE: $_['action_event'] = array(
+LINE: 61
+CODE: class ControllerEventCompatibility extends Controller {
+LINE: 5
+CODE: public function view(&$route, &$data) {
+LINE: 40
+
+FILE: admin/model/localisation/language.php
+CODE: $this->db->query("DELETE FROM " . DB_PREFIX . "banner_image_description WHERE language_id = '" . (int)$language_id . "'");
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: admin/view/template/extension/extension/analytics.tpl
+CODE: <?php } ?>
+LINE: 32
+CODE: <?php } else { ?>
+LINE: 48
+
+FILE: admin/controller/user/user_permission.php
+CODE: $path[] = $file . '/*';
+LINE: 369
+CODE: $permission = substr($controller, 0, strrpos($controller, '.'));
+LINE: 387
+CODE: $modification_info = $this->model_extension_modification->getModificationByCode($code);
+LINE: 533
+
+FILE: admin/controller/common/filemanager.php
+CODE: $files = glob($directory . '/' . $filter_name . '*.{jpg,jpeg,png,gif,JPG,JPEG,PNG,GIF}', GLOB_BRACE);
+LINE: 72
+CODE: 'jpg',
+LINE: 304
+CODE: 'image/jpeg',
+LINE: 317
+
+FILE: admin/model/tool/image.php
+CODE: public function resize($filename, $width, $height) {
+LINE: 18
+
+FILE: catalog/model/tool/image.php
+CODE: public function resize($filename, $width, $height) {
+LINE: 18
+----------------------------------------------------------------
