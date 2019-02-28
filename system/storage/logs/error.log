@@ -41,3 +41,11 @@
 2019-02-27 20:26:25 - PHP Notice:  Undefined variable: error_phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 31
 2019-02-27 20:27:19 - PHP Notice:  Undefined variable: phone in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 30
 2019-02-27 20:29:07 - PHP Warning:  mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\Apache24\htdocs\ocdi\system\library\mail.php on line 158
+2019-02-28 12:19:27 - PHP Notice:  Undefined variable: product_id in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\category.tpl on line 262
+2019-02-28 12:19:27 - PHP Notice:  Undefined variable: product_id in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\category.tpl on line 266
+2019-02-28 12:21:43 - PHP Notice:  Undefined variable: product_id in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\category.tpl on line 262
+2019-02-28 12:21:43 - PHP Notice:  Undefined variable: product_id in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\category.tpl on line 266
+2019-02-28 13:03:29 - PHP Notice:  Undefined variable: product_id in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\category.tpl on line 260
+2019-02-28 13:03:29 - PHP Notice:  Undefined variable: product_id in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\category.tpl on line 264
+2019-02-28 14:13:30 - PHP Notice:  Undefined variable: product_id in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\category.tpl on line 260
+2019-02-28 14:13:30 - PHP Notice:  Undefined variable: product_id in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\category.tpl on line 264
