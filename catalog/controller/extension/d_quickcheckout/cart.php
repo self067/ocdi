@@ -1,154 +1,403 @@
 <?php
 
 class ControllerExtensionDQuickcheckoutCart extends Controller {
+    private $route = 'extension/d_quickcheckout/cart';
 
-	public function index($config){
-        $this->load->model('extension/module/d_quickcheckout');
-        $this->model_extension_module_d_quickcheckout->logWrite('Controller:: cart/index');
+    public $action = array(
+        'cart/update',
+        'account/update/after',
+        'total/update',
+        'shipping_method/update/after',
+        'payment_method/update/after',
+        'payment_address/update/after',
+        'shipping_address/update/after'
+    );
 
-        $this->load->language('checkout/cart');
-        if(VERSION >= '2.3.0.0'){
-            $this->load->language('extension/total/coupon');
-        }elseif(VERSION >= '2.1.0.1'){
-            $this->load->language('total/coupon');
-        }else{
-            $this->load->language('checkout/coupon');
-        }
+    public function __construct($registry){
+        parent::__construct($registry);
 
-        if(!$config['general']['compress']){
-            $this->document->addScript('catalog/view/javascript/d_quickcheckout/model/cart.js');
-            $this->document->addScript('catalog/view/javascript/d_quickcheckout/view/cart.js');
-        }
+        $this->load->model('extension/d_quickcheckout/store');
+        $this->load->model('extension/d_quickcheckout/method');
+        $this->load->model('extension/d_quickcheckout/address');
 
-        $data['col'] = $config['account']['guest']['cart']['column'];
-        $data['row'] = $config['account']['guest']['cart']['row'];
+    }
 
-        $data['column_image'] = $this->language->get('column_image');
-        $data['column_name'] = $this->language->get('column_name');
-        $data['column_model'] = $this->language->get('column_model');
-        $data['column_quantity'] = $this->language->get('column_quantity');
-        $data['column_price'] = $this->language->get('column_price');
-        $data['column_total'] = $this->language->get('column_total');
-        $data['text_recurring_item'] = $this->language->get('text_recurring_item');
+    /**
+     * Initialization
+     */
+    public function index($config){
+        $this->document->addScript('catalog/view/theme/default/javascript/d_quickcheckout/step/cart.js');
 
-        if(VERSION >= '2.3.0.0'){
-            $this->load->language('extension/total/coupon');
-        }elseif(VERSION >= '2.1.0.1'){
-            $this->load->language('total/coupon');
-        }else{
-            $this->load->language('checkout/coupon');
-        }
-        $data['text_use_coupon'] = $this->language->get('heading_title');
+        
+        $state = $this->model_extension_d_quickcheckout_store->getState();
+        $state['config'] = $this->getConfig();
+        $state['language']['cart'] = $this->getLanguages();
+        $state['action']['cart'] = $this->action;
+        $this->model_extension_d_quickcheckout_store->setState($state);
 
-        if(VERSION >= '2.3.0.0'){
-            $this->load->language('extension/total/voucher');
-        }elseif(VERSION >= '2.1.0.1'){
-            $this->load->language('total/voucher');
-        }else{
-            $this->load->language('checkout/voucher');
-        }
-        $data['text_use_voucher'] = $this->language->get('heading_title');
+        $state = $this->model_extension_d_quickcheckout_store->getState();
+        $cart = $this->getDefault();
+        //$this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'cart'), $cart);
+        $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'cart', 'products'), $cart['products']);
+
+        $totals = $this->getTotals();
+        $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'totals'), $totals);
+    }
+
+    /**
+     * update via ajax
+     */
+    public function update(){
+        $this->model_extension_d_quickcheckout_store->loadState();
+        $this->model_extension_d_quickcheckout_store->dispatch('cart/update/before', $this->request->post);
+        $this->model_extension_d_quickcheckout_store->dispatch('cart/update', $this->request->post);
+
+        $data = $this->model_extension_d_quickcheckout_store->getStateUpdated();
+        
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
 
 
-        //reward
-        $points = $this->customer->getRewardPoints();
-        $points_total = 0;
-        foreach ($this->cart->getProducts() as $product) {
-            if ($product['points']) {
-                $points_total += $product['points'];
+    /**
+     * Receiver
+     * Receiver listens to dispatch of events and accepts data array with action and state
+     */
+    public function receiver($data){
+        $update = false;
+
+        //updating payment_method value
+        if($data['action'] == 'cart/update'){
+
+            if(isset($data['data']['cart'])){
+                $cart = $this->updateCart($data['data']['cart']);
+                if(!$cart['products']){
+                    $this->model_extension_d_quickcheckout_store->updateState(array( 'session', 'status'), false);
+                }else{
+                    $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'cart', 'products'), $cart['products']);
+                    
+                    $totals = $this->getTotals();
+                    $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'totals'), $totals);
+                }
+
+                $this->validate();
+
+                $update = true;
+            }
+
+            if(isset($data['data']['coupon'])){
+                $state = $this->model_extension_d_quickcheckout_store->getState();
+                $coupon = $data['data']['coupon'];
+                if(VERSION < '2.1.0.0'){
+                    $this->load->model('checkout/coupon');
+                    $this->load->language('checkout/coupon');
+                    $coupon_info = $this->model_checkout_coupon->getCoupon($coupon);
+                }elseif(VERSION < '2.3.0.0'){
+                    $this->load->model('total/coupon');
+                    $this->load->language('total/coupon');
+                    $coupon_info = $this->model_total_coupon->getCoupon($coupon);
+                }else{
+                    $this->load->model('extension/total/coupon');
+                    $this->load->language('extension/total/coupon');
+                    $coupon_info = $this->model_extension_total_coupon->getCoupon($coupon);
+                }
+
+                if (empty($data['data']['coupon'])) {
+                    $state['notifications']['cart']['error_coupon'] = $this->language->get('error_empty');
+
+                    $state['session']['coupon'] = "";
+                } elseif ($coupon_info) {
+                    $state['session']['coupon'] = $coupon;
+                    $state['notifications']['cart']['success_coupon'] = $this->language->get('text_success');
+                } else {
+                    $state['notifications']['cart']['error_coupon'] = $this->language->get('error_coupon');
+                }
+
+                if(!isset($state['session']['coupon'])){
+                    $state['session']['coupon'] = $coupon;
+                }
+
+                $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'coupon'), $state['session']['coupon']);
+                $this->model_extension_d_quickcheckout_store->updateState(array( 'notifications' , 'cart'), $state['notifications']['cart']);
+
+                $totals = $this->getTotals();
+                $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'totals'), $totals);
+
+                $update = true;
+            }
+
+            if(isset($data['data']['voucher'])){
+                $state = $this->model_extension_d_quickcheckout_store->getState();
+
+                $voucher = $data['data']['voucher'];
+                if(VERSION < '2.1.0.0'){
+                    $this->load->model('checkout/voucher');
+                    $this->load->language('checkout/voucher');
+                    $voucher_info = $this->model_checkout_voucher->getVoucher($voucher);
+                }elseif(VERSION < '2.3.0.0'){
+                    $this->load->model('total/voucher');
+                    $this->load->language('total/voucher');
+                    $voucher_info = $this->model_total_voucher->getVoucher($voucher);
+                }else{
+                    $this->load->model('extension/total/voucher');
+                    $this->load->language('extension/total/voucher');
+                    $voucher_info = $this->model_extension_total_voucher->getVoucher($voucher);
+                }
+
+                if (empty($data['data']['voucher'])) {
+                    $state['notifications']['cart']['error_voucher'] = $this->language->get('error_empty');
+                    $state['session']['voucher'] = "";
+                } elseif ($voucher_info) {
+                    $state['session']['voucher'] = $voucher;
+                    $state['notifications']['cart']['success_voucher'] = $this->language->get('text_success');
+                } else {
+                    $state['notifications']['cart']['error_voucher'] = $this->language->get('error_voucher');
+                }
+
+                if(!isset($state['session']['voucher'])){
+                    $state['session']['voucher'] = $voucher;
+                }
+
+                $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'voucher'), $state['session']['voucher']);
+                $this->model_extension_d_quickcheckout_store->updateState(array( 'notifications' , 'cart'), $state['notifications']['cart']);
+
+                $totals = $this->getTotals();
+                $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'totals'), $totals);
+
+                $update = true;
+            }
+
+            if(!empty($data['data']['reward'])){
+                $state = $this->model_extension_d_quickcheckout_store->getState();
+                if(VERSION < '2.3.0.0'){
+                    $this->load->language('total/reward');
+                }else{
+                    $this->load->language('extension/total/reward');
+                }
+                
+                $points = $this->customer->getRewardPoints();
+
+                $points_total = 0;
+
+                foreach ($this->cart->getProducts() as $product) {
+                    if ($product['points']) {
+                        $points_total += $product['points'];
+                    }
+                }
+
+                $reward = $data['data']['reward'];
+
+                if (empty($reward)) {
+                    $state['notifications']['cart']['error_reward'] = $this->language->get('error_reward');
+                }
+
+                if ($reward > $points) {
+                    $state['notifications']['cart']['error_reward'] = sprintf($this->language->get('error_points'), $this->request->post['reward']);
+                }
+
+                if ($reward > $points_total) {
+                    $state['notifications']['cart']['error_reward'] = sprintf($this->language->get('error_maximum'), $points_total);
+                }
+
+                if (!$state['notifications']['cart']) {
+                    $state['session']['reward'] = abs($reward);
+
+                    $state['notifications']['cart']['success_reward'] = $this->language->get('text_success');
+                }
+
+                if(!isset($state['session']['reward'])){
+                    $state['session']['reward'] = $reward;
+                }
+
+                $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'reward'), $state['session']['reward']);
+                $this->model_extension_d_quickcheckout_store->updateState(array( 'notifications' , 'cart'), $state['notifications']['cart']);
+
+                $totals = $this->getTotals();
+                $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'totals'), $totals);
+
+                $update = true;
+
             }
         }
 
-        if ($points && $points_total && $this->config->get('reward_status')) {
-            $data['reward_points'] = true;
+        if($data['action'] == 'account/update/after'){
+            if($this->model_extension_d_quickcheckout_store->isUpdated('account')){
+                $state = $this->model_extension_d_quickcheckout_store->getState();
+                if($state['session']['account'] == 'logged'){
+                    $this->load->model('extension/d_quickcheckout/order');
+                    $this->model_extension_d_quickcheckout_order->initCart();
+                }
+                
+                $cart = $this->getCart();
+                $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'cart', 'products'), $cart['products']);
 
-            if(VERSION >= '2.3.0.0'){
-                $this->load->language('extension/total/reward');
-            }elseif(VERSION >= '2.1.0.1'){
-                 $this->load->language('total/reward');
-            }else{
-                $this->load->language('checkout/reward');
+                $totals = $this->getTotals();
+                $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'totals'), $totals);
+
+                $update = true;
             }
-            $data['text_use_reward'] = sprintf($this->language->get('heading_title'), $points);
-            $data['entry_reward'] = sprintf($this->language->get('entry_reward'), $points_total);
-        }else{
-            $data['reward_points'] = false;
         }
 
-        $json = array();
-        $json['error'] = '';
-        $json['errors'] = array();
-        $json['successes'] = array();
+        if($update){
+            $this->model_extension_d_quickcheckout_store->updateState(array('cart_total_text'), $this->getCartTotalText());
+            $this->model_extension_d_quickcheckout_store->dispatch('cart/update/after', $data);
+        }
 
-        $json['account'] = $this->session->data['account'];
+        if($data['action'] == 'total/update'
+            || $data['action'] == 'shipping_method/update/after'
+            || $data['action'] == 'payment_method/update/after'){
 
-        $json = $this->prepare($json);
+            $state = $this->model_extension_d_quickcheckout_store->getState();
+            if($state['session']['account'] == 'logged'){
+                $this->load->model('extension/d_quickcheckout/order');
+                $this->model_extension_d_quickcheckout_order->initCart();
+                $this->model_extension_d_quickcheckout_store->updateState(array('cart_total_text'), $this->getCartTotalText());
+            }
 
-        $json['coupon'] = (isset($this->session->data['coupon'])) ? $this->session->data['coupon'] : '';
-        $json['voucher'] = (isset($this->session->data['voucher'])) ? $this->session->data['voucher'] : '';
-        $json['reward'] = (isset($this->session->data['reward'])) ? $this->session->data['reward'] : '';
+            $this->model_extension_d_quickcheckout_store->dispatch('total/update/before', array());
 
-        $totals = array();
-        $taxes = $this->cart->getTaxes();
-        $total = 0;
+            $this->model_extension_d_quickcheckout_address->updateTaxAddress();
 
-        $total_data = array(
-            'totals' => &$totals,
-            'taxes'  => &$taxes,
-            'total'  => &$total
-        );
+            $cart = $this->getCart();
+            $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'cart', 'products'), $cart['products']);
 
-        $json['totals'] = $this->session->data['totals'] = $this->model_extension_d_quickcheckout_order->getTotals($total_data);
-        $json['error'] = $json['cart_error'];
+            $totals = $this->getTotals();
+            $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'totals'), $totals);
 
-        $data['json'] = json_encode($json);
+            $this->model_extension_d_quickcheckout_store->dispatch('total/update/after', $data);
+        }
+    }
 
-		if(VERSION >= '2.2.0.0'){
-            $template = 'd_quickcheckout/cart';
-        }elseif (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/d_quickcheckout/cart.tpl')) {
-			$template = $this->config->get('config_template') . '/template/d_quickcheckout/cart.tpl';
-		} else {
-			$template = 'default/template/d_quickcheckout/cart.tpl';
-		}
+    public function validate(){
+        $result = true;
+        $state = $this->model_extension_d_quickcheckout_store->getState();
+        $this->load->language('extension/d_quickcheckout/cart');
+        if($state['config']['guest']['cart']['min_total'] > $state['session']['total']){
+            $state['errors']['cart']['error_min_total'] = sprintf($this->language->get('error_min_total'), $this->currency->format( $state['config']['guest']['cart']['min_total'], $this->session->data['currency']));
+            $result = false;
+        }else{
+            $state['errors']['cart']['error_min_total'] = '';
+        }
 
-        $this->load->model('extension/d_opencart_patch/load');
-        return $this->model_extension_d_opencart_patch_load->view($template, $data);
-
-	}
-
-    public function prepare($json){
-        $this->load->language('checkout/cart');
-        $this->load->model('tool/upload');
-
-        $json['show_price'] = $this->model_extension_d_quickcheckout_order->showPrice();
+        if($state['config']['guest']['cart']['min_quantity'] > $state['session']['quantity']){
+            $state['errors']['cart']['error_min_quantity'] = sprintf($this->language->get('error_min_quantity'), $state['config']['guest']['cart']['min_quantity']);
+            $result = false;
+        }else{
+            $state['errors']['cart']['error_min_quantity'] = '';
+        }
 
         if (!$this->cart->hasStock() && (!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning'))) {
-            $data['error_warning'] = $this->language->get('error_stock');
-            $stock_warning_status = $this->config->get('config_stock_warning');
-            $data['config_stock_warning'] = isset($stock_warning_status)?true:false;
-        } else {
-            $data['error_warning'] = '';
+            $this->load->language('checkout/cart');
+            $state['errors']['cart']['error_stock'] = $this->language->get('error_stock');
+            $result = false;
+        }else{
+            $state['errors']['cart']['error_stock'] = '';
         }
 
-        if ($this->cart->getTotal() < $this->session->data['d_quickcheckout']['general']['min_order']['value']) {
-            $data['error_warning'] = sprintf($this->session->data['d_quickcheckout']['general']['min_order']['text'], $this->session->data['d_quickcheckout']['general']['min_order']['value']);
+        $this->model_extension_d_quickcheckout_store->updateState(array( 'errors' , 'cart'), $state['errors']['cart']);
+        
+
+        $cart = $this->getCart();
+        $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'cart', 'products'), $cart['products']);
+
+
+
+        return $result;
+    }
+
+    private function getConfig(){
+        
+        $this->load->config('d_quickcheckout/cart');
+        $config = $this->config->get('d_quickcheckout_cart');
+
+        $settings = $this->model_extension_d_quickcheckout_store->getSetting();
+        $result = array();
+        foreach($config['account'] as $account => $value){
+            if(!empty($settings['config'][$account]['cart'])){
+                $result[$account]['cart'] = $settings['config'][$account]['cart'];
+            }else{
+                $result[$account]['cart'] = array_replace_recursive($config, $value);
+            }
         }
 
-        if ($this->cart->countProducts() < $this->session->data['d_quickcheckout']['general']['min_quantity']['value']) {
-            $data['error_warning'] = sprintf($this->session->data['d_quickcheckout']['general']['min_quantity']['text'], $this->session->data['d_quickcheckout']['general']['min_quantity']['value']);
+        return $result;
+    }
+
+    private function getLanguages(){
+        $this->load->language('checkout/cart');
+        $this->load->language('checkout/checkout');
+        $this->load->language('extension/d_quickcheckout/confirm');
+        $result = array();
+        $languages = $this->config->get('d_quickcheckout_cart_language');
+
+        foreach ($languages as $key => $language) {
+            $result[$key] = $this->language->get($language);
         }
 
-        if(VERSION < '2.1.0.1'){
-            foreach($this->session->data['cart'] as $key => $value){
+        if(VERSION < '2.1.0.0'){
+            $this->load->language('checkout/coupon');
+        }elseif(VERSION < '2.3.0.0'){
+            $this->load->language('total/coupon');
+        }else{
+            $this->load->language('extension/total/coupon');
+        }
+        $result['entry_coupon'] = $this->language->get('heading_title');
+        if(VERSION < '2.1.0.0'){
+            $this->load->language('checkout/voucher');
+        }elseif(VERSION < '2.3.0.0'){
+            $this->load->language('total/voucher');
+        }else{
+            $this->load->language('extension/total/voucher');
+        }
+        $result['entry_voucher'] = $this->language->get('heading_title');
+        if(VERSION < '2.1.0.0'){
+            $this->load->language('checkout/reward');
+        }elseif(VERSION < '2.3.0.0'){
+            $this->load->language('total/reward');
+        }else{
+            $this->load->language('extension/total/reward');
+        }
+        $points = $this->customer->getRewardPoints();
+        $result['entry_reward'] = sprintf($this->language->get('heading_title'), $points ? $points : 0);
+
+        $language = $this->model_extension_d_quickcheckout_store->getLanguage();
+        if(isset($language['cart'])){
+            $result = array_replace_recursive($result, $language['cart']);
+        }
+
+        $result['image'] = HTTPS_SERVER.'image/catalog/d_quickcheckout/step/cart.svg';
+
+        return $result;
+    }
+
+
+    private function getDefault(){
+        return $this->getCart();
+    }
+
+    private function updateCart($cart){
+        if($cart){
+            foreach($cart as $key => $value){
                 $this->cart->update($key, $value);
             }
         }
 
+        return $this->getCart();
+    }
+
+    private function getCart(){
+
+        $state = $this->model_extension_d_quickcheckout_store->getState();
+
+        $this->model_extension_d_quickcheckout_address->updateTaxAddress();
+
+        $data['products'] = array();
 
         $products = $this->cart->getProducts();
         $this->load->model('tool/image');
-        $json['products'] = array();
+        $quantity = 0;
         foreach ($products as $product) {
+
             $product_total = 0;
 
             foreach ($products as $product_2) {
@@ -162,9 +411,23 @@ class ControllerExtensionDQuickcheckoutCart extends Controller {
             }
 
             if ($product['image']) {
-                $image = $this->model_tool_image->resize($product['image'], $this->session->data['d_quickcheckout']['design']['cart_image_size']['width'], $this->session->data['d_quickcheckout']['design']['cart_image_size']['height']);
+                $image = $this->model_tool_image->resize(
+                    $product['image'], 
+                    $state['config'][$state['session']['account']]['cart']['image_size']['width'], 
+                    $state['config'][$state['session']['account']]['cart']['image_size']['height']
+                    );
             } else {
                 $image = '';
+            }
+
+            if ($product['image']) {
+                $thumb = $this->model_tool_image->resize(
+                    $product['image'], 
+                    $state['config'][$state['session']['account']]['cart']['thumb_size']['width'], 
+                    $state['config'][$state['session']['account']]['cart']['thumb_size']['height']
+                    );
+            } else {
+                $thumb = '';
             }
 
             $option_data = array();
@@ -186,17 +449,17 @@ class ControllerExtensionDQuickcheckoutCart extends Controller {
                 $option_data[] = array(
                     'name'  => $option['name'],
                     'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
-                );
+                    );
             }
 
-            // Display prices
+                    // Display prices
             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                 $price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')),$this->session->data['currency']);
             } else {
                 $price = false;
             }
 
-            // Display prices
+                    // Display prices
             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                 $total = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'],$this->session->data['currency']);
             } else {
@@ -212,7 +475,7 @@ class ControllerExtensionDQuickcheckoutCart extends Controller {
                     'semi_month' => $this->language->get('text_semi_month'),
                     'month'      => $this->language->get('text_month'),
                     'year'       => $this->language->get('text_year'),
-                );
+                    );
 
                 if ($product['recurring']['trial']) {
                     $recurring = sprintf($this->language->get('text_trial_description'), $this->currency->format($this->tax->calculate($product['recurring']['trial_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')),$this->session->data['currency']), $product['recurring']['trial_cycle'], $frequencies[$product['recurring']['trial_frequency']], $product['recurring']['trial_duration']) . ' ';
@@ -224,11 +487,11 @@ class ControllerExtensionDQuickcheckoutCart extends Controller {
                     $recurring .= sprintf($this->language->get('text_payment_until_canceled_description'), $this->currency->format($this->tax->calculate($product['recurring']['price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')),$this->session->data['currency']), $product['recurring']['cycle'], $frequencies[$product['recurring']['frequency']], $product['recurring']['duration']);
                 }
             }
-
-            $json['products'][] = array(
+            $data['products'][] = array(
                 'key'       => (isset($product['cart_id'])) ? $product['cart_id'] : $product['key'],
+                'product_id'=> $product['product_id'],
                 'image'     => $image,
-                'thumb'     => $image,
+                'thumb'     => $thumb,
                 'name'      => $product['name'],
                 'model'     => $product['model'],
                 'option'    => $option_data,
@@ -239,385 +502,45 @@ class ControllerExtensionDQuickcheckoutCart extends Controller {
                 'price'     => $price,
                 'total'     => $total,
                 'href'      => $this->url->link('product/product', 'product_id=' . $product['product_id'])
-            );
-            // fix for 2.1.0.0
-            $json['cart'][(isset($product['cart_id'])) ? $product['cart_id'] : $product['key']] = $product['quantity'];
-
-        }
-
-                //reward
-        $points = $this->customer->getRewardPoints();
-        $points_total = 0;
-        foreach ($this->cart->getProducts() as $product) {
-            if ($product['points']) {
-                $points_total += $product['points'];
-            }
-        }
-
-        if ($points && $points_total && $this->config->get('reward_status')) {
-            $json['reward_points'] = true;
-
-            if(VERSION >= '2.3.0.0'){
-                $this->load->language('extension/total/reward');
-            }elseif(VERSION >= '2.1.0.1'){
-                 $this->load->language('total/reward');
-            }else{
-                $this->load->language('checkout/reward');
-            }
-            $json['text_use_reward'] = sprintf($this->language->get('heading_title'), $points);
-            $json['entry_reward'] = sprintf($this->language->get('entry_reward'), $points_total);
-        }else{
-            $json['reward_points'] = false;
-        }
-
-        // Gift Voucher
-
-        if (!empty($this->session->data['vouchers'])) {
-            foreach ($this->session->data['vouchers'] as $key => $voucher) {
-                $json['vouchers'][] = array(
-                    'key'         => $key,
-                    'description' => $voucher['description'],
-                    'amount'      => $this->currency->format($voucher['amount'],$this->session->data['currency']),
-                    'remove'      => $this->url->link('checkout/cart', 'remove=' . $key)
                 );
-            }
+                            // fix for 2.1.0.0
+            $data[(isset($product['cart_id'])) ? $product['cart_id'] : $product['key']] = $product['quantity'];
+
+            $quantity = $product['quantity'];
+        }
+        $this->model_extension_d_quickcheckout_store->updateState(array( 'session' , 'quantity'), $quantity);
+
+        if(!$quantity){
+            $this->model_extension_d_quickcheckout_store->updateState(array( 'session', 'status'), false);
         }
 
-        if ($this->config->get('config_cart_weight')) {
-            $json['cart_weight'] = $this->weight->format($this->cart->getWeight(), $this->config->get('config_weight_class_id'), $this->language->get('decimal_point'), $this->language->get('thousand_point'),$this->session->data['currency']);
-        } else {
-            $json['cart_weight'] = false;
+        if(isset($data['error_warning'])){
+            $this->model_extension_d_quickcheckout_store->updateState(array( 'errors' , 'cart', 'error_minimum'), $data['error_warning']);
+        }else{
+            $this->model_extension_d_quickcheckout_store->updateState(array( 'errors' , 'cart', 'error_minimum'), '');
         }
-        $json['config_stock_warning'] = isset($data['config_stock_warning'])?$data['config_stock_warning']:'';
-        $json['cart_error'] = (!empty($data['error_warning'])) ? $data['error_warning'] : '';
 
-        return $json;
+        return $data;
     }
 
-	public function update(){
-        $this->load->model('extension/module/d_quickcheckout');
-        $this->load->model('extension/d_quickcheckout/address');
-        $this->load->model('extension/d_quickcheckout/method');
-        $this->load->model('extension/d_quickcheckout/order');
-
-        if(isset($this->request->post['cart'])){
-            foreach($this->request->post['cart'] as $key => $value){
-                $this->cart->update($key, $value);
-            }
-        }
-
-        $json = array();
-
-        if($this->model_extension_d_quickcheckout_order->isCartEmpty()){
-            $json['redirect'] = $this->model_extension_module_d_quickcheckout->ajax($this->url->link('checkout/cart'));
-        }else{
-
-            //payment address
-            $json['shipping_required'] = $this->model_extension_d_quickcheckout_method->shippingRequired();
-
-             //shipping address
-            $json = $this->load->controller('extension/d_quickcheckout/shipping_address/prepare', $json);
-
-            //cart
-            $json = $this->prepare($json);
-
-            //shipping method
-            $json = $this->load->controller('extension/d_quickcheckout/shipping_method/prepare', $json);
-
-            //payment method
-             $json = $this->load->controller('extension/d_quickcheckout/payment_method/prepare', $json);
-
-            //totals
-            $totals = array();
-            $taxes = $this->cart->getTaxes();
-            $total = 0;
-
-            $total_data = array(
-                'totals' => &$totals,
-                'taxes'  => &$taxes,
-                'total'  => &$total
-            );
-            $json['totals'] = $this->session->data['totals'] = $this->model_extension_d_quickcheckout_order->getTotals($total_data);
-            $json['total'] = $this->model_extension_d_quickcheckout_order->getCartTotal($total);
-
-            //confirm
-            $json['show_confirm'] = $this->model_extension_d_quickcheckout_order->showConfirm();
-
-            $json['order_id'] = $this->session->data['order_id'] = $this->load->controller('extension/d_quickcheckout/confirm/updateOrder');
-            //payment
-            $json = $this->load->controller('extension/d_quickcheckout/payment/prepare', $json);
-
-            //statistic
-            $statistic = array(
-                'click' => array(
-                    'cart' => 1
-                )
-            );
-            $this->model_extension_module_d_quickcheckout->updateStatistic($statistic);
-        }
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+    private function getCartTotalText(){
+        $this->load->language('checkout/cart');
+        return sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format( $this->session->data['total'], $this->session->data['currency']));
     }
+    
 
-    public function updateReward(){
-        $this->load->model('extension/module/d_quickcheckout');
+    private function getTotals(){
+
+        $totals = array();
+        $taxes = $this->cart->getTaxes();
+        $total = 0;
+
+        $total_data = array(
+            'totals' => &$totals,
+            'taxes'  => &$taxes,
+            'total'  => &$total
+            );
         $this->load->model('extension/d_quickcheckout/order');
-
-        if(VERSION >= '2.3.0.0'){
-            $this->load->language('extension/total/reward');
-        }elseif(VERSION >= '2.1.0.1'){
-             $this->load->language('total/reward');
-        }else{
-            $this->load->language('checkout/reward');
-        }
-
-        $json = array();
-
-        $points = $this->customer->getRewardPoints();
-
-        $points_total = 0;
-
-        foreach ($this->cart->getProducts() as $product) {
-            if ($product['points']) {
-                $points_total += $product['points'];
-            }
-        }
-
-        // if (empty($this->request->post['reward'])) {
-        //     $totals = array();
-        //     $taxes = $this->cart->getTaxes();
-        //     $total = 0;
-
-        //     $total_data = array(
-        //         'totals' => &$totals,
-        //         'taxes'  => &$taxes,
-        //         'total'  => &$total
-        //     );
-        //     $json['totals'] = $this->session->data['totals'] = $this->model_extension_d_quickcheckout_order->getTotals($total_data);
-        //     $json['total'] = $this->model_extension_d_quickcheckout_order->getCartTotal($total);
-        //     $json['order_id'] = $this->session->data['order_id'] = $this->load->controller('d_quickcheckout/confirm/updateOrder');
-        //     //payment
-        //     $json = $this->load->controller('d_quickcheckout/payment/prepare', $json);
-        // }
-
-        if ($this->request->post['reward'] > $points) {
-            $json['cart_errors']['reward'] = sprintf($this->language->get('error_points'), $this->request->post['reward']);
-        }
-
-        if ($this->request->post['reward'] > $points_total) {
-            $json['cart_errors']['reward'] = sprintf($this->language->get('error_maximum'), $points_total);
-        }
-
-        if (!$json) {
-            $this->session->data['reward'] = abs($this->request->post['reward']);
-
-            $json['cart_successes']['reward'] = $this->language->get('text_success');
-            $totals = array();
-            $taxes = $this->cart->getTaxes();
-            $total = 0;
-
-            $total_data = array(
-                'totals' => &$totals,
-                'taxes'  => &$taxes,
-                'total'  => &$total
-            );
-            $json['totals'] = $this->session->data['totals'] = $this->model_extension_d_quickcheckout_order->getTotals($total_data);
-            $json['total'] = $this->model_extension_d_quickcheckout_order->getCartTotal($total);
-            $json['order_id'] = $this->session->data['order_id'] = $this->load->controller('extension/d_quickcheckout/confirm/updateOrder');
-            //payment
-            $json = $this->load->controller('extension/d_quickcheckout/payment/prepare', $json);
-
-        }
-
-        //statistic
-        $statistic = array(
-            'update' => array(
-                'reward' => 1
-            )
-        );
-        $this->model_extension_module_d_quickcheckout->updateStatistic($statistic);
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
-
-    public function updateCoupon(){
-        $this->load->model('extension/module/d_quickcheckout');
-        $this->load->model('extension/d_quickcheckout/order');
-        if(VERSION >='2.3.0.0'){
-            $this->load->language('extension/total/coupon');
-        }elseif(VERSION >= '2.1.0.1'){
-            $this->load->language('total/coupon');
-        }else{
-            $this->load->language('checkout/coupon');
-        }
-
-        $json = array();
-        if(VERSION >= '2.3.0.0'){
-            $this->load->model('extension/total/coupon');
-        }elseif(VERSION >= '2.1.0.1'){
-            $this->load->model('total/coupon');
-        }else{
-            $this->load->model('checkout/coupon');
-        }
-
-
-        if (isset($this->request->post['coupon'])) {
-            $coupon = $this->request->post['coupon'];
-        } else {
-            $coupon = '';
-        }
-
-        if(VERSION >= '2.3.0.0'){
-            $coupon_info = $this->model_extension_total_coupon->getCoupon($coupon);
-        }elseif(VERSION >= '2.1.0.1'){
-            $coupon_info = $this->model_total_coupon->getCoupon($coupon);
-        }else{
-            $coupon_info = $this->model_checkout_coupon->getCoupon($coupon);
-        }
-
-        if (empty($this->request->post['coupon'])) {
-            unset($this->session->data['coupon']);
-            $totals = array();
-            $taxes = $this->cart->getTaxes();
-            $total = 0;
-
-            $total_data = array(
-                'totals' => &$totals,
-                'taxes'  => &$taxes,
-                'total'  => &$total
-            );
-            $json['totals'] = $this->session->data['totals'] = $this->model_extension_d_quickcheckout_order->getTotals($total_data);
-            $json['total'] = $this->model_extension_d_quickcheckout_order->getCartTotal($total);
-            $json['order_id'] = $this->session->data['order_id'] = $this->load->controller('extension/d_quickcheckout/confirm/updateOrder');
-            //payment
-            $json = $this->load->controller('extension/d_quickcheckout/payment/prepare', $json);
-
-        } elseif ($coupon_info) {
-            $this->session->data['coupon'] = $this->request->post['coupon'];
-
-            $json['cart_successes']['coupon'] =  $this->language->get('text_success');
-            $totals = array();
-            $taxes = $this->cart->getTaxes();
-            $total = 0;
-
-            $total_data = array(
-                'totals' => &$totals,
-                'taxes'  => &$taxes,
-                'total'  => &$total
-            );
-            $json['totals'] = $this->session->data['totals'] = $this->model_extension_d_quickcheckout_order->getTotals($total_data);
-            $json['total'] = $this->model_extension_d_quickcheckout_order->getCartTotal($total);
-            $json['order_id'] = $this->session->data['order_id'] = $this->load->controller('extension/d_quickcheckout/confirm/updateOrder');
-            //payment
-            $json = $this->load->controller('extension/d_quickcheckout/payment/prepare', $json);
-
-        } else {
-            $json['cart_errors']['coupon'] =  $this->language->get('error_coupon');
-        }
-
-        //statistic
-        $statistic = array(
-            'update' => array(
-                'coupon' => 1
-            )
-        );
-        $this->model_extension_module_d_quickcheckout->updateStatistic($statistic);
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
-
-    public function updateVoucher(){
-        $this->load->model('extension/module/d_quickcheckout');
-        $this->load->model('extension/d_quickcheckout/order');
-
-        if(VERSION >= '2.3.0.0'){
-            $this->load->language('extension/total/voucher');
-             $this->load->model('extension/total/voucher');
-        }elseif(VERSION >= '2.1.0.1'){
-            $this->load->language('total/voucher');
-             $this->load->model('total/voucher');
-        }else{
-            $this->load->language('checkout/voucher');
-             $this->load->model('checkout/voucher');
-        }
-
-        $json = array();
-
-        if (isset($this->request->post['voucher'])) {
-            $voucher = $this->request->post['voucher'];
-        } else {
-            $voucher = '';
-        }
-
-        if(VERSION >= '2.3.0.0'){
-            $voucher_info = $this->model_extension_total_voucher->getVoucher($voucher);
-        }elseif(VERSION >= '2.1.0.1'){
-             $voucher_info = $this->model_total_voucher->getVoucher($voucher);
-        }else{
-             $voucher_info = $this->model_checkout_voucher->getVoucher($voucher);
-        }
-
-        $statistic = array();
-        if (empty($this->request->post['voucher'])) {
-            $totals = array();
-            $taxes = $this->cart->getTaxes();
-            $total = 0;
-
-            $total_data = array(
-                'totals' => &$totals,
-                'taxes'  => &$taxes,
-                'total'  => &$total
-            );
-            $json['totals'] = $this->session->data['totals'] = $this->model_extension_d_quickcheckout_order->getTotals($total_data);
-            $json['total'] = $this->model_extension_d_quickcheckout_order->getCartTotal($total);
-            $json['order_id'] = $this->session->data['order_id'] = $this->load->controller('extension/d_quickcheckout/confirm/updateOrder');
-            //payment
-            $json = $this->load->controller('extension/d_quickcheckout/payment/prepare', $json);
-
-            $statistic += array(
-                'error' => array(
-                    'voucher' => 1
-                )
-            );
-        } elseif ($voucher_info) {
-            $this->session->data['voucher'] = $this->request->post['voucher'];
-            $json['cart_successes']['voucher'] =  $this->language->get('text_success');
-            $totals = array();
-            $taxes = $this->cart->getTaxes();
-            $total = 0;
-
-            $total_data = array(
-                'totals' => &$totals,
-                'taxes'  => &$taxes,
-                'total'  => &$total
-            );
-            $json['totals'] = $this->session->data['totals'] = $this->model_extension_d_quickcheckout_order->getTotals($total_data);
-            $json['total'] = $this->model_extension_d_quickcheckout_order->getCartTotal($total);
-            $json['order_id'] = $this->session->data['order_id'] = $this->load->controller('extension/d_quickcheckout/confirm/updateOrder');
-            //payment
-            $json = $this->load->controller('extension/d_quickcheckout/payment/prepare', $json);
-
-        } else {
-            $json['cart_errors']['voucher'] =  $this->language->get('error_voucher');
-            $statistic += array(
-                'error' => array(
-                    'voucher' => 1
-                )
-            );
-        }
-
-        //statistic
-        $statistic += array(
-            'update' => array(
-                'voucher' => 1
-            )
-        );
-        $this->model_extension_module_d_quickcheckout->updateStatistic($statistic);
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+        return $this->model_extension_d_quickcheckout_order->getTotals($total_data);
     }
 }

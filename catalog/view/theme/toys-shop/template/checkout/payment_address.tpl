@@ -289,20 +289,7 @@ $('#collapse-payment-address button[id^=\'button-payment-custom-field\']').on('c
 	}, 500);
 });
 //--></script>
-<script type="text/javascript"><!--
-$('.date').datetimepicker({
-	pickTime: false
-});
 
-$('.time').datetimepicker({
-	pickDate: false
-});
-
-$('.datetime').datetimepicker({
-	pickDate: true,
-	pickTime: true
-});
-//--></script>
 <script type="text/javascript"><!--
 $('#collapse-payment-address select[name=\'country_id\']').on('change', function() {
 	$.ajax({

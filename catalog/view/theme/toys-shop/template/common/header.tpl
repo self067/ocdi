@@ -33,7 +33,7 @@
 
 
 <script src='catalog/view/theme/toys-shop/js/jquery-2.2.3.min.js'></script>
-
+<script src='catalog/view/theme/toys-shop/js/popper.js'></script>
 <!-- ??????????? -->
 <!-- <link href="catalog/view/theme/toys-shop/css/stylesheet.css" rel="stylesheet"> -->
 	<!--booststrap-->
@@ -46,18 +46,13 @@
 	<link rel="stylesheet" href="catalog/view/theme/toys-shop/css/flexslider.css" type="text/css" media="all" />
 	<!--flexs slider-->
 	<!-- <link href="catalog/view/theme/toys-shop/css/JiSlider.css" rel="stylesheet"> -->
-	<!--Shoping cart-->
-	<link rel="stylesheet" href="catalog/view/theme/toys-shop/css/shop.css" type="text/css" />
-	<!--//Shoping cart-->
 
 	<link rel="stylesheet" type="text/css" href="catalog/view/theme/toys-shop/css/jquery-ui1.css">
   <link href="catalog/view/theme/toys-shop/css/easy-responsive-tabs.css" rel='stylesheet' type='text/css' />
   <link rel="stylesheet" href="catalog/view/theme/toys-shop/css/flexslider.css" type="text/css" media="screen" />
 
-	<!--//Shoping cart-->
-	<!--stylesheets-->
-	<link href="catalog/view/theme/toys-shop/css/style.css" rel='stylesheet' type='text/css' media="all">
-	<!--//stylesheets-->
+
+
 	<link href="//fonts.googleapis.com/css?family=Sunflower:500,700" rel="stylesheet">
 	<link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
 
@@ -87,7 +82,13 @@
 			}
 	</script>
 	<!--//meta tags ends here-->
-
+	<!--Shoping cart-->
+	<link rel="stylesheet" href="catalog/view/theme/toys-shop/css/shop.css" type="text/css" />
+	<!--//Shoping cart-->
+	<!--//Shoping cart-->
+	<!--stylesheets-->
+	<link href="catalog/view/theme/toys-shop/css/style.css" rel='stylesheet' type='text/css' media="all">
+	<!--//stylesheets-->
 	<link href="catalog/view/theme/toys-shop/css/style-di.css" rel='stylesheet' type='text/css' media="all">
 
 </head>
@@ -96,7 +97,7 @@
 <?php 
   $path = "common/home";
   $url = $_SERVER['REQUEST_URI'];
-  if ($url == "/" or strripos($url, $path)) {
+  if ($url == "/" or strripos($url, $path) or strripos($url, "ocdi/#")){// or $url == $baseURI ) {
     $is_home = true;
   }else{
     $is_home = false;
@@ -141,19 +142,14 @@
                            </li>
                            <li>
                               <button type="button" data-toggle="modal" data-target="#exampleModal"> <span class="far fa-user"></span></button>
-                           </li>
-                           <li class="toyscart toyscart2 cart cart box_1">
-                              <form action="#" method="post" class="last">
-                                 <input type="hidden" name="cmd" value="_cart">
-                                 <input type="hidden" name="display" value="1">
-                                 <button class="top_toys_cart" type="submit" name="submit" value="">
-                                 <span class="fas fa-cart-arrow-down"></span>
-                                 </button>
+													 </li>
+													 
 
-        													<!-- <a href="<?php echo $shopping_cart; ?>" > </a> -->
+													 <!-- <li class="toyscart toyscart2 cart cart box_1"> -->
+													 <?php echo $cart; ?>
+													 <!-- </li> -->
 
-                              </form>
-                           </li>
+
                         </ul>
                      </div>
                   </div>

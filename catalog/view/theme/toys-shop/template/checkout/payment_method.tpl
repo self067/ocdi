@@ -23,18 +23,19 @@
 </div>
 <?php } ?>
 <?php } ?>
-<p><strong><?php echo $text_comments; ?></strong></p>
-<p>
-  <textarea name="comment" rows="8" class="form-control"><?php echo $comment; ?></textarea>
-</p>
+
+
 <?php if ($text_agree) { ?>
 <div class="buttons">
   <div class="pull-right"><?php echo $text_agree; ?>
-    <?php if ($agree) { ?>
+
+	<!-- <?php if ($agree) { ?>
     <input type="checkbox" name="agree" value="1" checked="checked" />
     <?php } else { ?>
     <input type="checkbox" name="agree" value="1" />
-    <?php } ?>
+		<?php } ?> -->
+		
+<input type="checkbox" name="agree" value="1" checked="checked" />
     &nbsp;
     <input type="button" value="<?php echo $button_continue; ?>" id="button-payment-method" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary" />
   </div>

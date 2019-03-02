@@ -268,20 +268,7 @@ $('#collapse-shipping-address button[id^=\'button-shipping-custom-field\']').on(
 	}, 500);
 });
 //--></script>
-<script type="text/javascript"><!--
-$('.date').datetimepicker({
-	pickTime: false
-});
 
-$('.time').datetimepicker({
-	pickDate: false
-});
-
-$('.datetime').datetimepicker({
-	pickDate: true,
-	pickTime: true
-});
-//--></script>
 <script type="text/javascript"><!--
 $('#collapse-shipping-address select[name=\'country_id\']').on('change', function() {
 	$.ajax({

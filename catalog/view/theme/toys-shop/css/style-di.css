@@ -1,1 +1,7 @@
+a.sbmincart-name { 
+color: #000;
+}
 
+.modal-backdrop {
+	z-index: 97;
+}

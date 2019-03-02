@@ -1,133 +1,245 @@
 <?php
 
-    class ControllerExtensionDQuickcheckoutShippingMethod extends Controller {
+class ControllerExtensionDQuickcheckoutShippingMethod extends Controller {
+    private $route = 'd_quickcheckout/shipping_method';
+    private $hasShipping = null;
 
-        public function index($config) {
+    public $action = array(
+        'shipping_method/update',
+        'shipping_address/update/after',
+        'cart/update/after'
+    );
 
-            $this->load->model('extension/d_quickcheckout/method');
-            $this->load->model('extension/module/d_quickcheckout');
-            $this->model_extension_module_d_quickcheckout->logWrite('controller:: shipping_method/index');
+    public function __construct($registry){
+        parent::__construct($registry);
 
-            if (!$config['general']['compress']) {
-                $this->document->addScript('catalog/view/javascript/d_quickcheckout/model/shipping_method.js');
-                $this->document->addScript('catalog/view/javascript/d_quickcheckout/view/shipping_method.js');
-            }
-
-            $data['col'] = $config['account']['guest']['shipping_method']['column'];
-            $data['row'] = $config['account']['guest']['shipping_method']['row'];
-
-            $json['account'] = $this->session->data['account'];
-            $json['shipping_methods'] = $this->session->data['shipping_methods'];
-            $json['shipping_method'] = $this->session->data['shipping_method'];
-            $json['show_shipping_method'] = $this->model_extension_d_quickcheckout_method->shippingRequired();
-            if (empty($this->session->data['shipping_methods'])) {
-                $json['shipping_error'] = sprintf($this->language->get('error_no_shipping'), $this->url->link('information/contact'));
-            } else {
-                $json['shipping_error'] = '';
-            }
-            $data['json'] = json_encode($json);
-
-            if(VERSION >= '2.2.0.0'){
-                $template = 'd_quickcheckout/shipping_method';
-			}elseif (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/d_quickcheckout/shipping_method.tpl')) {
-                $template = $this->config->get('config_template') . '/template/d_quickcheckout/shipping_method.tpl';
-            } else {
-                $template = 'default/template/d_quickcheckout/shipping_method.tpl';
-            }
-
-            $this->load->model('extension/d_opencart_patch/load');
-            return $this->model_extension_d_opencart_patch_load->view($template, $data);
-        }
-
-        public function update() {
-            $this->load->model('extension/d_quickcheckout/order');
-            $this->load->model('extension/module/d_quickcheckout');
-
-            $json = array();
-
-            $json = $this->prepare($json);
-
-            //payment method - for xshipping (optimization needed)
-            $json = $this->load->controller('extension/d_quickcheckout/payment_method/prepare', $json);
-
-            $totals = array();
-            $taxes = $this->cart->getTaxes();
-            $total = 0;
-
-            $total_data = array(
-                'totals' => &$totals,
-                'taxes'  => &$taxes,
-                'total'  => &$total
-            );
-
-            $json['totals'] = $this->session->data['totals'] = $this->model_extension_d_quickcheckout_order->getTotals($total_data);
-            $json['total'] = $this->model_extension_d_quickcheckout_order->getCartTotal($total);
-            $json['order_id'] = $this->session->data['order_id'] = $this->load->controller('extension/d_quickcheckout/confirm/updateOrder');
-
-            //payment
-            $json = $this->load->controller('extension/d_quickcheckout/payment/prepare', $json);
-
-            //statistic
-            $statistic = array(
-                'update' => array(
-                    'shipping_method' => 1
-                )
-            );
-
-
-
-            $this->model_extension_module_d_quickcheckout->updateStatistic($statistic);
-
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($json));
-        }
-
-        public function prepare($json) {
-            $this->load->model('extension/module/d_quickcheckout');
-            $this->load->model('extension/d_quickcheckout/method');
-            $this->load->model('extension/d_quickcheckout/address');
-             $this->load->model('extension/d_quickcheckout/order');
-
-            $this->session->data['shipping_methods'] = $this->model_extension_d_quickcheckout_method->getShippingMethods($this->model_extension_d_quickcheckout_address->paymentOrShippingAddress());
-
-            if (isset($this->request->post['shipping_method'])) {
-                $shipping = explode('.', $this->request->post['shipping_method']);
-                $this->session->data['shipping_method'] = $this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]];
-            }
-
-            if (isset($this->session->data['shipping_method']['code'])) {
-          
-                if (!$this->model_extension_module_d_quickcheckout->in_array_multi($this->session->data['shipping_method']['code'], $this->session->data['shipping_methods'])) {
-                    $this->session->data['shipping_method'] = $this->model_extension_d_quickcheckout_method->getFirstShippingMethod();
-             
-                } else {
-                    $shipping = explode('.', $this->session->data['shipping_method']['code']);
-                    $this->session->data['shipping_method'] = array_merge($this->session->data['shipping_method'], $this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]]);
-                  
-                }
-            }
-
-            if (empty($this->session->data['shipping_method'])) {
-				
-                $this->session->data['shipping_method'] = $this->model_extension_d_quickcheckout_method->getDefaultShippingMethod($this->session->data['d_quickcheckout']['account']['register']['shipping_method']['default_option']);
-            }
-
-
-            $json['show_shipping_method'] = $this->model_extension_d_quickcheckout_method->shippingRequired();
-            $json['shipping_methods'] = $this->session->data['shipping_methods'];
-            if (empty($this->session->data['shipping_methods'])) {
-                 $this->load->language('checkout/checkout');
-                $json['shipping_error'] = sprintf($this->language->get('error_no_shipping'), $this->url->link('information/contact'));
-            } else {
-                $json['shipping_error'] = '';
-            }
-            $json['show_confirm'] = $this->model_extension_d_quickcheckout_order->showConfirm();
-
-            $json['shipping_method'] = $this->session->data['shipping_method'];
-            $this->model_extension_module_d_quickcheckout->logWrite('Controller:: shipping_method/prepare. shipping_methods = ' . json_encode($json['shipping_methods']) . ' shipping_method = ' . json_encode($json['shipping_method']));
-
-            return $json;
-        }
+        $this->load->model('extension/d_quickcheckout/store');
+        $this->load->model('extension/d_quickcheckout/method');
 
     }
-    
+    /**
+    * Initialization
+    */
+    public function index($config){
+        $this->document->addScript('catalog/view/theme/default/javascript/d_quickcheckout/step/shipping_method.js');
+
+        $state = $this->model_extension_d_quickcheckout_store->getState();
+
+    //set default values
+        $state['session']['shipping_methods'] = $this->getShippingMethods();
+        $this->model_extension_d_quickcheckout_store->setState($state);
+
+        $state['session']['shipping_method'] = $this->getDefault();
+        $state['config'] = $this->getConfig();
+
+        $state['language']['shipping_method'] = $this->getLanguages();
+        $state['action']['shipping_method'] = $this->action;
+
+        $this->model_extension_d_quickcheckout_store->setState($state);
+        $this->validate();
+
+    }
+
+    /**
+    * update via ajax
+    */
+    public function update(){
+        $this->model_extension_d_quickcheckout_store->loadState();
+        $this->model_extension_d_quickcheckout_store->dispatch('shipping_method/update/before', $this->request->post);
+        $this->model_extension_d_quickcheckout_store->dispatch('shipping_method/update', $this->request->post);
+
+        $data = $this->model_extension_d_quickcheckout_store->getStateUpdated();
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
+
+    /**
+    * Receiver
+    * Receiver listens to dispatch of events and accepts data array with action and state
+    */
+    public function receiver($data){
+        $update_method = false;
+        $update = false;
+
+        //updating shipping_method value
+        if($data['action'] == 'shipping_method/update'){
+
+            if(isset($data['data']['shipping_method'])){
+                if(is_string($data['data']['shipping_method'])){
+                    $update['session']['shipping_method'] = $this->getShippingMethod($data['data']['shipping_method']);
+                    $this->model_extension_d_quickcheckout_store->setState($update);
+                }
+            }
+        }
+
+        //updating shipping_methods after shipping_address change
+        if($data['action'] == 'shipping_address/update/after' 
+            && (
+                $this->model_extension_d_quickcheckout_store->isUpdated('shipping_address_country_id')
+                || $this->model_extension_d_quickcheckout_store->isUpdated('shipping_address_zone_id')
+                || $this->model_extension_d_quickcheckout_store->isUpdated('shipping_address_address_id')
+                || $this->model_extension_d_quickcheckout_store->isUpdated('shipping_address_postcode')
+                )
+            ){
+            $update_method = true;
+        }
+
+        //updating shipping_methods after cart change
+        if($data['action'] == 'cart/update/after'){
+            $update_method = true;
+        }
+
+
+
+        if($update_method){
+            $state = $this->model_extension_d_quickcheckout_store->getState();
+            if($this->hasShipping()){
+                $update['session']['shipping_methods'] = $this->getShippingMethods();
+                $this->model_extension_d_quickcheckout_store->updateState(array('session','shipping_methods'), $update['session']['shipping_methods']);
+
+                $update['session']['shipping_method'] = $this->getShippingMethod($state['session']['shipping_method']['code']);
+                $this->model_extension_d_quickcheckout_store->updateState(array('session','shipping_method'), $update['session']['shipping_method']);
+
+            }
+
+            $this->validate();
+        }
+
+        if($update){
+
+            $this->model_extension_d_quickcheckout_store->dispatch('shipping_method/update/after', $data);
+        }
+    }
+ 
+    public function validate(){
+        $this->load->language('checkout/checkout');
+        $state = $this->model_extension_d_quickcheckout_store->getState();
+        if(empty($state['errors']['shipping_method'])){
+            $state['errors']['shipping_method'] = array();
+        }
+        $state['errors']['shipping_method']['error_shipping'] = '';
+
+        if(!$this->hasShipping()){
+            $state['errors']['shipping_method']['error_no_shipping'] = '';
+            foreach($state['config'] as $account => $value){
+                $state['config'][$account]['shipping_method']['display'] = 0;
+            }
+            $this->model_extension_d_quickcheckout_store->setState($state);
+            return true;
+        }else{
+            if(!$state['config'][$state['session']['account']]['shipping_method']['display']){
+                $this->load->config('d_quickcheckout/shipping_method');
+                $config = $this->config->get('d_quickcheckout_shipping_method');
+                $settings = $this->model_extension_d_quickcheckout_store->getSetting();
+                foreach($config['account'] as $account => $value){
+                    if(!empty($settings['config'][$account]['shipping_method']['display'])){
+                        $state['config'][$account]['shipping_method']['display'] = $settings['config'][$account]['shipping_method']['display'];
+                    }else{
+                        $state['config'][$account]['shipping_method']['display'] = $value['display'];
+                    }
+                }
+            }
+        }
+
+        $result = true;
+        if(empty($state['session']['shipping_methods'] )){
+            $state['errors']['shipping_method']['error_no_shipping'] = $this->language->get('error_no_shipping');
+            $result = false;
+        }else{
+            $state['errors']['shipping_method']['error_no_shipping'] = '';
+            if(empty($state['session']['shipping_method'] )){
+                $state['errors']['shipping_method']['error_shipping'] = $this->language->get('error_shipping');
+                $result = false;
+            }
+        }
+
+
+
+        $this->model_extension_d_quickcheckout_store->updateState(array('errors','shipping_method'), $state['errors']['shipping_method']);
+
+        return $result;
+    }
+
+    private function getConfig(){
+        $this->load->config('d_quickcheckout/shipping_method');
+        $config = $this->config->get('d_quickcheckout_shipping_method');
+
+        $settings = $this->model_extension_d_quickcheckout_store->getSetting();
+        $result = array();
+        foreach($config['account'] as $account => $value){
+            if(!empty($settings['config'][$account]['shipping_method'])){
+                $result[$account]['shipping_method'] = $settings['config'][$account]['shipping_method'];
+            }else{
+                $result[$account]['shipping_method'] = array_replace_recursive($config, $value);
+            }
+
+            if(!$this->hasShipping()){
+                $result[$account]['shipping_method']['display'] = 0;
+            }
+        }
+
+        return $result;
+    }
+
+    private function getLanguages(){
+        $this->load->language('checkout/checkout');
+        $this->load->language('extension/d_quickcheckout/shipping_method');
+
+        $result = array();
+        $languages = $this->config->get('d_quickcheckout_shipping_method_language');
+
+        foreach ($languages as $key => $language) {
+            $result[$key] = $this->language->get($language);
+        }
+
+        $language = $this->model_extension_d_quickcheckout_store->getLanguage();
+        if(isset($language['shipping_method'])){
+            $result = array_replace_recursive($result, $language['shipping_method']);
+        }
+
+        $result['image'] = HTTPS_SERVER.'image/catalog/d_quickcheckout/step/shipping_method.svg';
+
+        return $result;
+    }
+
+    private function getDefault(){
+        return $this->model_extension_d_quickcheckout_method->getDefaultShippingMethod('flat.flat');
+    }
+
+    private function getShippingMethod($shipping_method = false){
+        if(!$shipping_method){
+            if(!empty($state['session']['shipping_method'])){
+                $state = $this->model_extension_d_quickcheckout_store->getState();
+                $shipping_method = $state['session']['shipping_method']['code'];
+            }
+        }
+        return $this->model_extension_d_quickcheckout_method->getDefaultShippingMethod($shipping_method);
+    }
+
+    private function getShippingMethods(){
+        $state = $this->model_extension_d_quickcheckout_store->getState();
+        $new_shipping_methods = $this->model_extension_d_quickcheckout_method->getShippingMethods($state['session']['shipping_address']);
+
+        if(isset($state['session']['shipping_methods'])){
+            foreach($state['session']['shipping_methods'] as $key => $value){
+                if(!isset($new_shipping_methods[$key])){
+                    $new_shipping_methods[$key] = false;
+                }
+            }
+        }
+        
+
+        return $new_shipping_methods;
+    }
+
+    private function hasShipping(){
+        if($this->hasShipping == null){
+            $this->hasShipping = $this->cart->hasShipping();
+        }
+        return $this->hasShipping;
+    }
+
+
+}

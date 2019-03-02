@@ -1,11 +1,7 @@
 <?php echo $header; ?>
 <div class="container">
-  <ul class="breadcrumb">
-    <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-    <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
-    <?php } ?>
-  </ul>
-  <?php if ($error_warning) { ?>
+
+<?php if ($error_warning) { ?>
   <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
     <button type="button" class="close" data-dismiss="alert">&times;</button>
   </div>
@@ -19,15 +15,15 @@
     <?php $class = 'col-sm-12'; ?>
     <?php } ?>
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
-      <h1><?php echo $heading_title; ?></h1>
+		<h1><?php echo $heading_title; ?></h1>
 
             <?php if (isset($oplata_error)) { ?>
         <div class="alert alert-warning"><?php echo $oplata_error; ?><button type="button" class="close" data-dismiss="alert">×</button></div>
         <?php } ?>
 			
-      <div class="panel-group" id="accordion">
-        <div class="panel panel-default">
-          <div class="panel-heading">
+    <div class="panel-group" id="accordion">
+			<div class="panel panel-default" style="display:none;">
+			  <div class="panel-heading">
             <h4 class="panel-title"><?php echo $text_checkout_option; ?></h4>
           </div>
           <div class="panel-collapse collapse" id="collapse-checkout-option">
@@ -54,11 +50,12 @@
         </div>
         <?php } ?>
         <?php if ($shipping_required) { ?>
-        <div class="panel panel-default">
+
+				<div class="panel panel-default" style="display:none;">
           <div class="panel-heading">
             <h4 class="panel-title"><?php echo $text_checkout_shipping_address; ?></h4>
-          </div>
-          <div class="panel-collapse collapse" id="collapse-shipping-address">
+					</div>
+					<div class="panel-collapse collapse" id="collapse-shipping-address">
             <div class="panel-body"></div>
           </div>
         </div>
@@ -70,15 +67,17 @@
             <div class="panel-body"></div>
           </div>
         </div>
-        <?php } ?>
-        <div class="panel panel-default">
+				<?php } ?>
+				
+        <div class="panel panel-default" style="display:none;">
           <div class="panel-heading">
             <h4 class="panel-title"><?php echo $text_checkout_payment_method; ?></h4>
           </div>
           <div class="panel-collapse collapse" id="collapse-payment-method">
             <div class="panel-body"></div>
           </div>
-        </div>
+				</div>
+								
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title"><?php echo $text_checkout_confirm; ?></h4>

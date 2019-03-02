@@ -1,70 +1,130 @@
-<?php 
-
+<?php
 class ControllerExtensionDQuickcheckoutPayment extends Controller {
-	
-	public function index($config){
+    private $route = 'd_quickcheckout/payment';
 
-		$this->load->model('extension/module/d_quickcheckout');
-		$this->load->model('extension/d_quickcheckout/method');
-        $this->model_extension_module_d_quickcheckout->logWrite('controller:: payment/index');
-		
-		if(!$config['general']['compress']){
-			$this->document->addScript('catalog/view/javascript/d_quickcheckout/model/payment.js');
-			$this->document->addScript('catalog/view/javascript/d_quickcheckout/view/payment.js');
-		}
+    public $action = array(
+        'payment_method/update/after',
+        'total/update/after'
+    );
 
-		$data['col'] = $config['account']['guest']['payment']['column'];
-        $data['row'] = $config['account']['guest']['payment']['row'];
+    public function __construct($registry){
+        parent::__construct($registry);
 
-        $json = array();
-        $json = $this->prepare($json);
-        $json['account'] = $this->session->data['account'];
-        $json['trigger'] = $config['trigger'];
-		
-		$data['json'] = json_encode($json);
+        $this->load->model('extension/d_quickcheckout/store');
+        $this->load->model('extension/d_quickcheckout/method');
 
-		if(VERSION >= '2.2.0.0'){
-            $template = 'd_quickcheckout/payment';
-        }elseif (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/d_quickcheckout/payment.tpl')) {
-			$template = $this->config->get('config_template') . '/template/d_quickcheckout/payment.tpl';
-		} else {
-			$template = 'default/template/d_quickcheckout/payment.tpl';
-		}
+    }
 
-		$this->load->model('extension/d_opencart_patch/load');
-        return $this->model_extension_d_opencart_patch_load->view($template, $data);
-	}
+    /**
+     *  Initialization
+     *
+     *  Loaded in the extension/module/d_quickcheckout controller once.
+     *  Sets default values to state
+     *
+     */
+    public function index($config){
+        $this->document->addScript('catalog/view/theme/default/javascript/d_quickcheckout/step/payment.js');
 
-	public function prepare($json){
-		$this->load->model('extension/d_quickcheckout/method');
-		if(isset($this->session->data['payment_method']) && isset($this->session->data['payment_method']['code'])){
-			$json['payment_popup'] = $this->model_extension_d_quickcheckout_method->getPaymentPopup($this->session->data['payment_method']['code']);
-			
-			if($json['payment_popup']){
-				if(!empty($json['cofirm_order'])){
-					if(VERSION < '2.3.0.0'){
-						$json['payment'] = $this->load->controller('payment/' . $this->session->data['payment_method']['code']);
-					}else{
-						$json['payment'] = $this->load->controller('extension/payment/' . $this->session->data['payment_method']['code']);
-					}
-				}else{
-					$json['payment'] = '';
-				}
-			}else{
-				if(VERSION < '2.3.0.0'){
-					$json['payment'] = $this->load->controller('payment/' . $this->session->data['payment_method']['code']);
-				}else{
-					$json['payment'] = $this->load->controller('extension/payment/' . $this->session->data['payment_method']['code']);
-				}
-			}
-			
-			$json['payment_popup_title'] = $this->session->data['payment_method']['title'];
+        $state = $this->model_extension_d_quickcheckout_store->getState();
 
-		}else{
-			$json['payment'] = '';
-		}
+        $state['session']['payment'] = $this->getDefault();
+        $state['config'] = $this->getConfig();
+
+        $state['language']['payment'] = $this->getLanguages();
+        $state['action']['payment'] = $this->action;
+        $this->model_extension_d_quickcheckout_store->setState($state);
+    }
+
+    /**
+     *  Update
+     *
+     *  Called via AJAX to update state by current module.
+     *  Returns updated state.
+     *
+     */
+    public function update(){
+        $this->model_extension_d_quickcheckout_store->loadState();
+        $this->model_extension_d_quickcheckout_store->dispatch('payment/update/before', $this->request->post);
+        $this->model_extension_d_quickcheckout_store->dispatch('payment/update', $this->request->post);
+
+        $data = $this->model_extension_d_quickcheckout_store->getStateUpdated();
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
 
 
-		return $json;
-	}
+    /**
+     *  Receiver
+     *
+     *  Receiver listens to dispatch of events and accepts data with action and state.
+     *  Receivers are parsed with the first initialization of Store in extension/module/d_quickcheckout controller
+     *
+     */
+    public function receiver($data){
+        $update = false;
+
+
+        //updating payment_method value
+        if($data['action'] == 'payment_method/update/after'
+        || $data['action'] == 'total/update/after'){
+
+            $payment = $this->model_extension_d_quickcheckout_method->getPayment();
+            $this->model_extension_d_quickcheckout_store->updateState(array('session', 'payment'), $payment);
+            $update = true;
+        }
+
+        if($update){
+            $this->model_extension_d_quickcheckout_store->dispatch('payment/update/after', $data);
+        }
+    }
+
+    public function validate(){
+        return true;
+    }
+
+    private function getConfig(){
+
+        $this->load->config('d_quickcheckout/payment');
+        $config = $this->config->get('d_quickcheckout_payment');
+        
+        $settings = $this->model_extension_d_quickcheckout_store->getSetting();
+        $result = array();
+        foreach($config['account'] as $account => $value){
+            if(!empty($settings['config'][$account]['payment'])){
+                $result[$account]['payment'] = $settings['config'][$account]['payment'];
+            }else{
+                $result[$account]['payment'] = array_replace_recursive($config, $value);
+            }
+        }
+
+        return $result;
+    }
+
+    private function getLanguages(){
+        $this->load->language('checkout/checkout');
+        $this->load->language('extension/d_quickcheckout/payment');
+
+        $result = array();
+        $languages = $this->config->get('d_quickcheckout_payment_language');
+
+        foreach ($languages as $key => $language) {
+            $result[$key] = $this->language->get($language);
+        }
+
+        $language = $this->model_extension_d_quickcheckout_store->getLanguage();
+        if(isset($language['payment'])){
+            $result = array_replace_recursive($result, $language['payment']);
+        }
+
+        $result['image'] = HTTPS_SERVER.'image/catalog/d_quickcheckout/step/payment.svg';
+
+        return $result;
+    }
+
+    private function getDefault(){
+
+        return $this->model_extension_d_quickcheckout_method->getPayment();
+
+    }
 }

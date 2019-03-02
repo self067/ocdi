@@ -119,6 +119,8 @@
 <!-- for product.tpl -->
 			<script type="text/javascript"><!--
 $('#button-cart').on('click', function() {
+	console.log('cart-add footer.tpl');
+
 	$.ajax({
 		url: 'index.php?route=checkout/cart/add',
 		type: 'post',
@@ -132,14 +134,10 @@ $('#button-cart').on('click', function() {
 		},
 		success: function(json) {
 
-			console.log('cart add success111');
-			console.log(json);
-
 			$('.alert, .text-danger').remove();
 			$('.form-group').removeClass('has-error');
 
 			if (json['error']) {
-				console.log('cart error ');
 				if (json['error']['option']) {
 					for (i in json['error']['option']) {
 						var element = $('#input-option' + i.replace('_', '-'));
@@ -159,8 +157,7 @@ $('#button-cart').on('click', function() {
 				// Highlight any found errors
 				$('.text-danger').parent().addClass('has-error');
 			}
-
-			console.log(json['success']);
+			
 			if (json['success']) {
 				// console.log('cart add json- success');
 				// $('#cart-total').html( json['total']);
@@ -168,15 +165,10 @@ $('#button-cart').on('click', function() {
 				// console.log( 'modal-body ' + aa );
 				$('.modal-body').load('index.php?route=common/cart/info .modal-list');
 
-				// aa = $('#modalCart');
-				// console.log('modalCart ' + aa );
-				$('#modalCart').modal();
-				// aa =  $('staplesbmincart');
 				// console.log('staplesbmincart '  + aa);
-				$('staplesbmincart').modal();
-				$('html, body').animate({ scrollTop: 0 }, 'slow');
+				$('staplesbmincart').modal(false);
+//				$('html, body').animate({ scrollTop: 0 }, 'slow');
 				// $('#cart > ul').load('index.php?route=common/cart/info ul li');
-				console.log('cart add success22');
 
 			}
 		},

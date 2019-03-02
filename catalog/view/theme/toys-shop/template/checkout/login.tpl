@@ -1,11 +1,19 @@
+<script>
+ $(document).ready(function(){
+ setTimeout(function(){
+  $('#button-account').trigger('click');
+  },400);
+ });
+</script>
+
 <div class="row">
   <div class="col-sm-6">
     <h2><?php echo $text_new_customer; ?></h2>
     <p><?php echo $text_checkout; ?></p>
-    <div class="radio">
+		<div class="radio">
       <label>
         <?php if ($account == 'register') { ?>
-        <input type="radio" name="account" value="register" checked="checked" />
+        <input type="radio" name="account" value="register"  />
         <?php } else { ?>
         <input type="radio" name="account" value="register" />
         <?php } ?>
@@ -17,11 +25,11 @@
         <?php if ($account == 'guest') { ?>
         <input type="radio" name="account" value="guest" checked="checked" />
         <?php } else { ?>
-        <input type="radio" name="account" value="guest" />
+        <input type="radio" name="account" value="guest" checked="checked" />
         <?php } ?>
         <?php echo $text_guest; ?></label>
-    </div>
-    <?php } ?>
+ 		</div>
+     <?php } ?>
     <p><?php echo $text_register_account; ?></p>
     <input type="button" value="<?php echo $button_continue; ?>" id="button-account" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary" />
   </div>
