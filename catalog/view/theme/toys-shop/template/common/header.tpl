@@ -9,6 +9,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="interkassa-verification" content="52d689535fe4541a8feb876ea16a3e88" />
+
 <title><?php echo $title; ?></title>
 <base href="<?php echo $base; ?>" />
 <?php if ($description) { ?>
@@ -97,7 +99,7 @@
 <?php 
   $path = "common/home";
   $url = $_SERVER['REQUEST_URI'];
-  if ($url == "/" or strripos($url, $path) or strripos($url, "ocdi/#")){// or $url == $baseURI ) {
+  if ($url == "/" or strripos($url, $path) or strripos($url, "ru/#")){// or $url == $baseURI ) {
     $is_home = true;
   }else{
     $is_home = false;
@@ -129,10 +131,11 @@
                      <h1><a class="navbar-brand" href="<?php echo $home; ?>"><?php echo $name; ?></a></h1>
                   </div>
                   <div class="col-lg-5 col-md-6 search-right">
-                     <form class="form-inline my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search">
-                        <button class="btn" type="submit">Search</button>
-                     </form>
+                     <!-- <form class="form-inline my-lg-0"> -->
+                        <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search"> -->
+												<!-- <button class="btn" type="submit">Search</button> -->
+												<?php echo $search ?>
+                     <!-- </form> -->
                   </div>
                   <div class="col-lg-4 col-md-3 right-side-cart">
                      <div class="cart-icons">
@@ -174,7 +177,7 @@
                      <li class="nav-item">
                         <a href="<?php echo $categories[0]['href']; ?>" class="nav-link">Shop Now</a>
                      </li>
-                     <li class="nav-item dropdown">
+                     <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Pages
                         </a>
@@ -182,7 +185,7 @@
                            <a class="nav-link" href="icon.html">404 Page</a>
                            <a class="nav-link " href="typography.html">Typography</a>
                         </div>
-                     </li>
+                     </li> -->
                      <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Product

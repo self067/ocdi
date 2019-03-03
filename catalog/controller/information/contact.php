@@ -76,6 +76,8 @@ class ControllerInformationContact extends Controller {
 		}
 
 		$data['button_submit'] = $this->language->get('button_submit');
+///////////////
+		$data['config_email'] = $this->config->get('config_email');
 
 		$data['action'] = $this->url->link('information/contact', '', true);
 

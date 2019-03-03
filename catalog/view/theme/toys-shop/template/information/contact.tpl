@@ -8,7 +8,8 @@
             <h3 class="title text-center mb-lg-5 mb-md-4 mb-sm-4 mb-3">Contact US</h3>
             <div class="contact-list-grid">
 
-						<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
+						<!-- <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data"> -->
+						<form action="" method="post" enctype="multipart/form-data">
 						<!-- <fieldset> -->
 							<div class=" agile-wls-contact-mid">
                      <div class="form-group contact-forms">
@@ -25,10 +26,9 @@
 													<div class="text-danger"><?php echo $error_email; ?></div>
 													<?php } ?>
 
-
                      </div>
                      <div class="form-group contact-forms">
-												<input type="text" class="form-control" placeholder="Phone" name="telephone" value="<?php echo $telephone; ?>" id="input-phone">
+												<input type="text" class="form-control" placeholder="Phone" name="tel" value="<?php echo $telephone; ?>" id="input-phone">
 												
                      </div>
                      <div class="form-group contact-forms">
@@ -46,6 +46,8 @@
           									</div>
         									</div> -->
 
+											<input type="hidden" name="config_email" value="<?php echo $config_email;?>">
+											<!-- <input type="hidden" name="page_success" value="<?php echo $page_success;?>"> -->
 
                      <button type="submit" class="btn btn-block sent-butnn">Send</button>
                   </div>
@@ -55,5 +57,25 @@
          <!--//contact-map -->
 				 </section>
 
+
+
+<script>
+		$('form').submit(function (event) {
+			event.preventDefault();
+			$.ajax({
+				type: "POST",
+				url: "catalog/view/theme/toys-shop/template/information/phpmailer/mail.php",
+				data: $(this).serialize()
+			}).done(function () { 
+				$(this).find("input").val("");
+				$("form").trigger("reset");
+
+				//  $this->response->redirect($this->url->link('information/contact/success'));
+				location.href ='https://ocdi.jktu.ru/index.php?route=information/contact/success';
+
+			});
+			return false;
+		});
+	</script>
 
 <?php echo $footer; ?>

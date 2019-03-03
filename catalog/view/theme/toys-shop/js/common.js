@@ -52,9 +52,12 @@ $(document).ready(function() {
 
 	/* Search */
 	$('#search input[name=\'search\']').parent().find('button').on('click', function() {
+
+		
 		var url = $('base').attr('href') + 'index.php?route=product/search';
 
-		var value = $('header #search input[name=\'search\']').val();
+		// var value = $('header #search input[name=\'search\']').val();
+		var value = $('#search input[name=\'search\']').val();
 
 		if (value) {
 			url += '&search=' + encodeURIComponent(value);
@@ -65,7 +68,8 @@ $(document).ready(function() {
 
 	$('#search input[name=\'search\']').on('keydown', function(e) {
 		if (e.keyCode == 13) {
-			$('header #search input[name=\'search\']').parent().find('button').trigger('click');
+			// $('header #search input[name=\'search\']').parent().find('button').trigger('click');
+			$('#search input[name=\'search\']').parent().find('button').trigger('click');
 		}
 	});
 
@@ -139,6 +143,7 @@ $(document).ready(function() {
 // Cart add remove functions
 var cart = {
 	'add': function(product_id, quantity) {
+		console.log('common cart.add');
 		$.ajax({
 			url: 'index.php?route=checkout/cart/add',
 			type: 'post',

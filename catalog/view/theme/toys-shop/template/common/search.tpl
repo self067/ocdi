@@ -1,6 +1,4 @@
-<div id="search" class="input-group">
-  <input type="text" name="search" value="<?php echo $search; ?>" placeholder="<?php echo $text_search; ?>" class="form-control input-lg" />
-  <span class="input-group-btn">
-    <button type="button" class="btn btn-default btn-lg"><i class="fa fa-search"></i></button>
-  </span>
+<div id="search" class="form-inline my-lg-0">
+		<input class="form-control mr-sm-2" type="search" name="search" placeholder="Search">
+		<button class="btn button-search" type="submit"><?php echo $text_search; ?></button>
 </div>

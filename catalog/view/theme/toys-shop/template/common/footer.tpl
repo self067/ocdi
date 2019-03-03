@@ -117,6 +117,8 @@
       </script> -->
       <!-- //cart-js -->
 <!-- for product.tpl -->
+
+
 			<script type="text/javascript"><!--
 $('#button-cart').on('click', function() {
 	console.log('cart-add footer.tpl');
@@ -159,16 +161,14 @@ $('#button-cart').on('click', function() {
 			}
 			
 			if (json['success']) {
-				// console.log('cart add json- success');
+				console.log('cart add json- success');
 				// $('#cart-total').html( json['total']);
 				// var aa = $('.modal-body');
 				// console.log( 'modal-body ' + aa );
+				$('html, body').animate({ scrollTop: 0 }, 'slow');
 				$('.modal-body').load('index.php?route=common/cart/info .modal-list');
 
-				// console.log('staplesbmincart '  + aa);
-				$('staplesbmincart').modal(false);
-//				$('html, body').animate({ scrollTop: 0 }, 'slow');
-				// $('#cart > ul').load('index.php?route=common/cart/info ul li');
+				$('#staplesbmincart').modal(false);
 
 			}
 		},
@@ -343,11 +343,22 @@ $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
          	});
          
          });
-      </script>
+			</script>
+			
       <!-- //here ends scrolling icon -->
       <!-- //smooth-scrolling-of-move-up -->
       <!--bootstrap working-->
       <script src="catalog/view/theme/toys-shop/js/bootstrap.min.js"></script>
-      <!-- //bootstrap working--> 
+			<!-- //bootstrap working--> 
+
+
+
+<script>
+        (function(w,d,u){
+                var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/60000|0);
+                var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
+        })(window,document,'https://cdn.bitrix24.ru/b7991399/crm/site_button/loader_3_68v03u.js');
+</script>
+
    </body>
 </html>

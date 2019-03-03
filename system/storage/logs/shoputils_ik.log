@@ -1,0 +1,27 @@
+2019-03-03 0:20:38 - Make payment form: 
+2019-03-03 0:20:38 -   DATA: array (
+  'ik_am' => '186900.00',
+  'ik_co_id' => '123456789',
+  'ik_cur' => 'RUB',
+  'ik_desc' => 'Оплата заказа №3',
+  'ik_pm_no' => '3',
+  'ik_sign' => 'deZm6DXctq7G6OP6hTEK0g==',
+)
+2019-03-03 0:32:51 - Make payment form: 
+2019-03-03 0:32:51 -   DATA: array (
+  'ik_am' => '1568.00',
+  'ik_co_id' => '5c7af58f3d1eaf18798b4568',
+  'ik_cur' => 'USD',
+  'ik_desc' => 'Оплата заказа №4',
+  'ik_pm_no' => '4',
+  'ik_sign' => 'o0XzFcpAqizFQ5atWVlfnw==',
+)
+2019-03-03 0:38:43 - Make payment form: 
+2019-03-03 0:38:43 -   DATA: array (
+  'ik_am' => '249200.00',
+  'ik_co_id' => '5c7af58f3d1eaf18798b4568',
+  'ik_cur' => 'RUB',
+  'ik_desc' => 'Оплата заказа №5',
+  'ik_pm_no' => '5',
+  'ik_sign' => '8c3Ef8A49QW4Br2IX6fCvQ==',
+)

@@ -5,3 +5,7 @@ color: #000;
 .modal-backdrop {
 	z-index: 97;
 }
+
+div#content {
+	padding: 1.5rem;
+}

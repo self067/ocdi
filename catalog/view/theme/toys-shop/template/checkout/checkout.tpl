@@ -64,7 +64,7 @@
         </div>
 				<?php } ?>
 				
-        <div class="panel panel-default" style="display:none;">
+        <div class="panel panel-default" >
           <div class="panel-heading">
             <h4 class="panel-title"><?php echo $text_checkout_payment_method; ?></h4>
           </div>

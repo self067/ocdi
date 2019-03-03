@@ -110,7 +110,8 @@
 
 														<!-- <button type="button" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary btn-lg btn-block"><?php echo $button_cart; ?></button> -->
 														<div class="button-group">
-   							            <button type="button" class="toys-cart ptoys-cart add" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
+														<!-- <button type="button" class="toys-cart ptoys-cart add" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button> -->
+														<button type="button" class="toys-cart ptoys-cart add" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" ><span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
 														</div>
 
 

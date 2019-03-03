@@ -2,26 +2,11 @@
 final class Loader {
 	protected $registry;
 
-    protected $load;
-            
-
 	public function __construct($registry) {
-
-    //d_event_manager.xml loader
-    $this->load = new d_event_manager\Loader($this, $registry);
-            
 		$this->registry = $registry;
 	}
 	
-	
-    //d_event_manager.xml controller
-    public function controller($route, $args = array()) {
-        return $this->load->controller($route, $args);
-    }
-    
-    //this is the original controller method which is called by the d_event_menager\Loader -> contorller method
-    public function _controller($route, $data = array()) {
-            
+	public function controller($route, $data = array()) {
 		// Sanitize the call
 		$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$route);
 		
@@ -93,30 +78,16 @@ final class Loader {
 		}
 		
 		if (!$output) {
-
-            //d_event_manager.xml fix
-            if (!$output) {
-            
 			$template = new Template($this->registry->get('config')->get('template_type'));
 			
 			foreach ($data as $key => $value) {
 				$template->set($key, $value);
 			}
 		
-
-            //d_twig.xml 2
-
-            $output = $this->controller('event/d_twig_manager/support', array('route' => $route, 'data' => $data));
-            if(!$output && file_exists( DIR_TEMPLATE . $route . '.tpl'))
-            
 			$output = $template->render($route . '.tpl');
 		}
 		
 		// Trigger the post events
-
-            //d_event_manager.xml 1.3
-            }
-            
 		$result = $this->registry->get('event')->trigger('view/' . $route . '/after', array(&$route, &$data, &$output));
 		
 		if ($result) {

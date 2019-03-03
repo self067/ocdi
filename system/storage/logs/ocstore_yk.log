@@ -1,0 +1,16 @@
+2019-03-02 23:51:05 - CheckURL: 
+2019-03-02 23:51:05 -   POST:array (
+)
+2019-03-02 23:51:05 -   GET:array (
+  'route' => 'extension/payment/ocstore_yk/check',
+)
+2019-03-02 23:51:05 - ERROR: Ответ от шлюза не типа POST
+2019-03-02 23:51:05 - OK: code = 1; type = check; POST: 
+2019-03-02 23:51:33 - CallbackURL: 
+2019-03-02 23:51:33 -   POST:array (
+)
+2019-03-02 23:51:33 -   GET:array (
+  'route' => 'extension/payment/ocstore_yk/callback',
+)
+2019-03-02 23:51:33 - ERROR: Ответ от шлюза не типа POST
+2019-03-02 23:51:33 - OK: code = 1; type = aviso; POST: 
