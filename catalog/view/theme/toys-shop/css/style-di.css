@@ -9,3 +9,35 @@ color: #000;
 div#content {
 	padding: 1.5rem;
 }
+
+.modal-header {
+	-webkit-box-pack: end;
+	-webkit-justify-content: flex-end;
+	    -ms-flex-pack: end;
+					justify-content: flex-end;
+					
+	border: none;
+}
+
+.modal-footer {
+	border: none;
+}
+
+#staplesbmincart .sbmincart-details-price span.sbmincart-price {
+	color:	#000;
+	font-size: 15px;
+	border: none ;
+	letter-spacing: 0px;
+	line-height: normal;
+	text-align: right;
+	margin: 0px 5px;
+
+}
+
+#staplesbmincart .sbmincart-subtotal {
+	color: #000;
+}
+
+#staplesbmincart .sbmincart-submit a {
+color: #26bb48;
+}

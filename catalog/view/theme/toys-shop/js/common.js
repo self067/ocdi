@@ -174,7 +174,7 @@ var cart = {
 					$('html, body').animate({ scrollTop: 0 }, 'slow');
 
 					$('.modal-body').load('index.php?route=common/cart/info .modal-list');
-					$('#staplesbmincart').modal(false);
+					$('#staplesbmincart').modal();
 				}
 			},
 			error: function(xhr, ajaxOptions, thrownError) {

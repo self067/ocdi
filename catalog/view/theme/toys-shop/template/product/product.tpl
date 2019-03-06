@@ -92,51 +92,15 @@
                      <div class="occasion-cart">
                         <div class="toys single-item singlepage" id="product">
 
-												<!-- <form action="#" method="post">
-                              <input type="hidden" name="cmd" value="_cart">
-                              <input type="hidden" name="add" value="1">
-                              <input type="hidden" name="toys_item" value="<?php echo $heading_title;?>">
-                              <input type="hidden" name="amount" value="<?php echo $price; ?>">
-
-															<div class="button-group">
-	   							            <button type="button" class="toys-cart ptoys-cart add" id="button-cart" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
-															</div>
-
-													</form> -->
-
 													<div class="form-group">
 														<input type="hidden" name="quantity" value="1"  id="input-quantity"  />
 														<input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
 
-														<!-- <button type="button" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary btn-lg btn-block"><?php echo $button_cart; ?></button> -->
 														<div class="button-group">
-														<!-- <button type="button" class="toys-cart ptoys-cart add" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button> -->
 														<button type="button" class="toys-cart ptoys-cart add" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" ><span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
 														</div>
 
-
-
 													</div>
-
-
-
-<!-- /////////????????????? -->
-					
-												<!-- <?php if ($product['special']) { ?>
-													<div class="flag-sale_wrap">
-														<span class="flag-sale"><?php echo "SALE";?></span>
-													</div>
-												<?php } ?> -->
-
-
-							<!-- <div class="form-group">
-              <label class="control-label" for="input-quantity"><?php echo $entry_qty; ?></label>
-              <input type="number" name="quantity" value="<?php echo $minimum; ?>" size="2" min="<?php echo $minimum; ?>" id="input-quantity" class="form-control" />
-              <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
-              <br />
-              <button type="button" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary btn-lg btn-block"><?php echo $button_cart; ?></button>
-              </div> -->
-
 													 
 
                         </div>

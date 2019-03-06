@@ -63,14 +63,7 @@
                                     </div>
                                     <div class="toys single-item hvr-outline-out">
 
-																		<!-- <form action="#" method="post">
-                                          <input type="hidden" name="cmd" value="_cart">
-                                          <input type="hidden" name="add" value="1">
-                                          <input type="hidden" name="toys_item" value="<?php echo $product['name']; ?>">
-                                          <input type="hidden" name="amount" value="<?php echo $product['price']; ?>"> -->
-
 <!-- //!!! -->
-
 																					<button type="button" class="toys-cart ptoys-cart button-cart" onclick="cart.add('<?php echo $product['product_id']; ?>');">
                                           <i class="fas fa-cart-plus"></i>
 																					<span class="hidden-xs hidden-sm hidden-md"></span></button>

@@ -45,10 +45,10 @@
             <div class="email-sub-agile">
                <form action="#" method="post">
                   <div class="form-group sub-info-mail">
-                     <input type="email" class="form-control email-sub-agile" placeholder="Email">
+                     <input type="email" class="form-control email-sub-agile" id="input-newsletter" placeholder="Email" value="" name="newsletter">
                   </div>
                   <div class="text-center">
-                     <button type="submit" class="btn subscrib-btnn">Subscribe</button>
+                     <button type="submit" id="subcribe" class="btn subscrib-btnn">Subscribe</button>
                   </div>
                </form>
             </div>
@@ -99,6 +99,56 @@
          </div>
       </div>
       <!-- //Modal 1-->
+
+
+
+
+                <script type="text/javascript" language="javascript"><!--
+                    
+                     function validateEmail($email) {
+                        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+                        return emailReg.test( $email );
+                      }
+
+                    $(document).ready(function(){
+                        $('#subcribe').click(function(){
+                            var email = $('#input-newsletter').val();
+                            
+                            if(email == ''){
+                                var error = 'Введите email адрес!';
+                            }
+                            
+                            if( !validateEmail(email)) {
+                                var error = 'Введите правильный email адрес!';
+                            }
+                            
+                            if(error != null){
+                                $('#error-msg').html('');
+                                $('#error-msg').append('<b style=\"color:red\">' + error + '</b>');
+                            } else {
+                              
+                                var dataString = 'email='+ email;
+                                $.ajax({
+                                    url: 'index.php?route=common/footer/addToNewsletter',
+                                    type: 'post',
+                                    data: dataString,
+                                    success: function(html) {
+                                       $('#error-msg').append('<b style=\"color:green\">' + html + '</b>');
+                                    }
+                                    
+                                });
+                            }
+                            
+                        })
+                    });
+                //--></script>
+
+
+
+
+
+
+
 
 			<!--js working-->
       <script src='catalog/view/theme/toys-shop/js/jquery-2.2.3.min.js'></script>
@@ -168,7 +218,7 @@ $('#button-cart').on('click', function() {
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 				$('.modal-body').load('index.php?route=common/cart/info .modal-list');
 
-				$('#staplesbmincart').modal(false);
+				$('#staplesbmincart').modal();
 
 			}
 		},

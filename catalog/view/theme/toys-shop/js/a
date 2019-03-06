@@ -1,0 +1,125 @@
+Сравнение файлов common.js и COMMON.JS_
+***** common.js
+        $('#search input[name=\'search\']').parent().find('button').on('click', function() {
+                var url = $('base').attr('href') + 'index.php?route=product/search';
+***** COMMON.JS_
+        $('#search input[name=\'search\']').parent().find('button').on('click', function() {
+
+                
+                var url = $('base').attr('href') + 'index.php?route=product/search';
+*****
+
+***** common.js
+
+                var value = $('header #search input[name=\'search\']').val();
+
+***** COMMON.JS_
+
+                // var value = $('header #search input[name=\'search\']').val();
+                var value = $('#search input[name=\'search\']').val();
+
+*****
+
+***** common.js
+                if (e.keyCode == 13) {
+                        $('header #search input[name=\'search\']').parent().find('button').trigger('click');
+                }
+***** COMMON.JS_
+                if (e.keyCode == 13) {
+                        // $('header #search input[name=\'search\']').parent().find('button').trigger('click');
+                        $('#search input[name=\'search\']').parent().find('button').trigger('click');
+                }
+*****
+
+***** common.js
+        // tooltips on hover
+        $('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
+
+***** COMMON.JS_
+        // tooltips on hover
+//??????????
+//      $('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
+
+*****
+
+***** common.js
+        'add': function(product_id, quantity) {
+                $.ajax({
+***** COMMON.JS_
+        'add': function(product_id, quantity) {
+                console.log('common cart.add');
+                $.ajax({
+*****
+
+***** common.js
+                                        // Need to set timeout otherwise it wont update the total
+                                        setTimeout(function () {
+                                                // $('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-car
+***** COMMON.JS_
+                                        // Need to set timeout otherwise it wont update the total
+//                                      setTimeout(function () {
+                                                // $('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-car
+*****
+
+***** common.js
+t"></i> ' + json['total'] + '</span>');
+                                                $('#cart-total').html( json['total']);
+                                        }, 100);
+
+
+                                        
+                                        // $('html, body').animate({ scrollTop: 0 }, 'slow');
+
+***** COMMON.JS_
+t"></i> ' + json['total'] + '</span>');
+//                                              $('#cart-total').html( json['total']);
+//                                      }, 100);
+                                        
+                                        $('html, body').animate({ scrollTop: 0 }, 'slow');
+
+*****
+
+***** common.js
+                                        $('.modal-body').load('index.php?route=common/cart/info .modal-list');
+                                        $('#modalCart').modal();
+                                }
+***** COMMON.JS_
+                                        $('.modal-body').load('index.php?route=common/cart/info .modal-list');
+                                        $('#staplesbmincart').modal(false);
+                                }
+*****
+
+***** common.js
+                                // Need to set timeout otherwise it wont update the total
+                                setTimeout(function () {
+                                        // $('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> 
+***** COMMON.JS_
+                                // Need to set timeout otherwise it wont update the total
+                                // setTimeout(function () {
+                                        // $('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> 
+*****
+
+***** common.js
+' + json['total'] + '</span>');
+                                        $('#cart-total').html( json['total']);
+                                }, 100);
+
+                                if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
+***** COMMON.JS_
+' + json['total'] + '</span>');
+                                        // $('#cart-total').html( json['total']);
+                                // }, 100);
+                                
+                                if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
+*****
+
+***** common.js
+                                        $('.modal-body').load('index.php?route=common/cart/info .modal-list');
+                                        $('#modalCart').modal();
+
+***** COMMON.JS_
+                                        $('.modal-body').load('index.php?route=common/cart/info .modal-list');
+                                        $('#staplesbmincart').modal(false);
+
+*****
+
