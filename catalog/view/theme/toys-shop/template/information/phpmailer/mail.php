@@ -19,13 +19,16 @@ $mail->Host = 'smtp.mail.ru';  // Specify main and backup SMTP servers
 $mail->SMTPAuth = true;                               // Enable SMTP authentication
 $mail->Username = 'self67@list.ru';                 // Наш логин
 $mail->Password = 'qwe123';                           // Наш пароль от ящика
+
 $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
 $mail->Port = 465;                                    // TCP port to connect to
  
 $mail->setFrom('self67@list.ru', 'Toys Shop');   // От кого письмо 
 $mail->addAddress($config_email);     // Add a recipient
 // $mail->addCC('seltor@mail.ru');
-$mail->addCC($email);
+
+//$mail->addCC($email);
+
 //$mail->addAddress('ellen@example.com');               // Name is optional
 //$mail->addReplyTo('info@example.com', 'Information');
 //$mail->addCC('cc@example.com');
@@ -45,11 +48,30 @@ $mail->Body    = '
 
 $mail->AltBody = 'Это альтернативный текст';
 
+
+$mail->Send();
+
+/*
 if(!$mail->send()) {
     return false;
 } else {
     return true;
 }
+  */
+$mail->clearAddresses();
+$mail->addAddress($email);
+
+$mail->Subject = 'Заявка с сайта ...';
+$mail->Body = 'Ваша заявка успешно оставлена';
+
+if(!$mail->send()) {
+    return false;
+} else {
+    return true;
+}
+
+
+
 
 ?>
 

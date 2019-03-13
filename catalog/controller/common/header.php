@@ -96,6 +96,13 @@ class ControllerCommonHeader extends Controller {
     
 		$data['page404'] = $this->url->link('error/not_found', '', true);
 
+
+		$data['newsletter'] = $this->url->link('account/newsletter', '', true);
+		$data['feedback'] = $this->url->link('feedback/feedback', '', true);
+		$data['newsblog'] = $this->url->link('newsblog/category', '', true);
+
+		$data['article'] = $this->url->link('newsblog/article', '', true);
+
 /////////////////////////////////////////		
 
 		// Menu

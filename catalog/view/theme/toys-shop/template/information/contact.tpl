@@ -47,7 +47,7 @@
         									</div> -->
 
 											<input type="hidden" name="config_email" value="<?php echo $config_email;?>">
-											<!-- <input type="hidden" name="page_success" value="<?php echo $page_success;?>"> -->
+
 
                      <button type="submit" class="btn btn-block sent-butnn">Send</button>
                   </div>
@@ -55,8 +55,7 @@
             </div>
          </div>
          <!--//contact-map -->
-				 </section>
-
+	 </section>
 
 
 <script>

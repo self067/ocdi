@@ -483,3 +483,12 @@
 2019-03-04 18:42:19 - PHP Notice:  Undefined variable: product in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 113
 2019-03-04 18:42:19 - PHP Notice:  Undefined variable: product in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 113
 2019-03-04 18:42:19 - PHP Notice:  Undefined variable: product in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 125
+2019-03-09 18:28:47 - PHP Notice:  Undefined variable: page_success in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 50
+2019-03-09 19:02:19 - PHP Notice:  Undefined variable: page_success in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 50
+2019-03-09 19:05:02 - PHP Notice:  Undefined variable: page_success in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 50
+2019-03-09 19:05:12 - PHP Notice:  Undefined variable: page_success in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\information\contact.tpl on line 50
+2019-03-13 17:06:44 - PHP Notice:  Undefined variable: product in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 102
+2019-03-13 17:06:44 - PHP Notice:  Undefined variable: product in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 102
+2019-03-13 17:06:44 - PHP Notice:  Undefined variable: product in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 113
+2019-03-13 17:06:44 - PHP Notice:  Undefined variable: product in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 113
+2019-03-13 17:06:44 - PHP Notice:  Undefined variable: product in C:\Apache24\htdocs\ocdi\catalog\view\theme\toys-shop\template\product\product.tpl on line 125

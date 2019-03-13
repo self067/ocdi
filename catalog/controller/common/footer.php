@@ -1,5 +1,52 @@
 <?php
 class ControllerCommonFooter extends Controller {
+
+                    public function addToNewsletter(){
+            
+                        $email = $this->request->post['email'];
+                        
+                        $this->load->language('common/footer');
+                        $this->load->model('account/customer');
+
+                        $this->createNewsletterTables();
+                        
+                        $count = $this->checkEmailSubscribe($email);
+                        
+                        if($count == 0){
+                            
+                            $newsletter_id = $this->model_account_customer->addToNewsletter($email);
+                            $msg = $this->language->get('text_success_subcribe');
+                            
+                        } else {
+                            
+                            $msg = $this->language->get('text_error_subcribe');
+                        }
+                        
+                        echo $msg;
+
+                    }
+        
+                    public function createNewsletterTables() {
+
+                        $query = $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "newsletter (
+                        `id` INT( 11 ) NOT NULL AUTO_INCREMENT ,
+                        `email` VARCHAR( 255 ) NOT NULL ,
+                        `group` VARCHAR( 25 ) NOT NULL ,
+                        `date_added` DATETIME NOT NULL ,
+                        PRIMARY KEY ( `id` )
+                        )");
+                    } 
+        
+                    public function checkEmailSubscribe($email){
+
+                        $this->load->model('account/customer');
+
+                        $count = $this->model_account_customer->checkEmailSubscribe($email);
+
+                        return $count;
+
+                    }
+
 	public function index() {
 		$this->load->language('common/footer');
 
@@ -19,6 +66,11 @@ class ControllerCommonFooter extends Controller {
 		$data['text_order'] = $this->language->get('text_order');
 		$data['text_wishlist'] = $this->language->get('text_wishlist');
 		$data['text_newsletter'] = $this->language->get('text_newsletter');
+
+		$data['geocode'] = $this->config->get('config_geocode');
+		$data['geocode_hl'] = $this->config->get('config_language');
+		$data['button_map'] = $this->language->get('button_map');
+
 
 		$this->load->model('catalog/information');
 
@@ -44,6 +96,13 @@ class ControllerCommonFooter extends Controller {
 		$data['order'] = $this->url->link('account/order', '', true);
 		$data['wishlist'] = $this->url->link('account/wishlist', '', true);
 		$data['newsletter'] = $this->url->link('account/newsletter', '', true);
+
+
+                    $data['text_newsletter_text'] = $this->language->get('text_newsletter_text');
+                    $data['text_subcribe'] = $this->language->get('text_subcribe');
+                    $data['text_error_subcribe'] = $this->language->get('text_error_subcribe');
+                    $data['text_success_subcribe'] = $this->language->get('text_success_subcribe');
+
 
 		$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));
 

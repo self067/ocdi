@@ -3,7 +3,17 @@
          <div class="container-fluid">
          <div class="row">
             <div class="col-lg-6 col-md-6 map-info-right px-0">
-               <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3150859.767904157!2d-96.62081048651531!3d39.536794757966845!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1408111832978"> </iframe>
+              <?php if ($geocode) { ?>
+
+		<div class="User-Map" id="User-Map"> </div>
+
+
+              <?php } ?>
+<!--	<div id="User-Map"></div>
+              <a href="https://maps.google.com/maps?q=<?php echo urlencode($geocode); ?>&hl=<?php echo $geocode_hl; ?>&t=m&z=15" target="_blank" class="btn btn-info"><i class="fa fa-map-marker"></i> <?php echo $button_map; ?></a>
+		<iframe src="https://www.google.com/maps/@<?php echo urlencode($geocode); ?>,17z"></iframe>
+
+	 -->
             </div>
             <div class="col-lg-6 col-md-6 address-w3l-right text-center">
                <div class="address-gried ">
@@ -101,6 +111,54 @@
       <!-- //Modal 1-->
 
 
+
+
+
+ <script src="https://api-maps.yandex.ru/2.1/?apikey=ab58573f-8c84-4167-a799-6b2a7441eaba&lang=ru_RU"
+  type="text/javascript">
+  </script>
+
+<script type="text/javascript" language="javascript">
+var myMap;
+ymaps.ready(function () {
+	myMap = new ymaps.Map('User-Map', {
+	//	 center: [54.752262, 55.999019],
+		center: [<?php echo $geocode; ?>],
+		controls: [],
+		zoom: 15
+	},
+	),
+
+
+	myMap.behaviors.disable('scrollZoom');
+
+
+});
+
+</script>
+
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzus_QP-ijgoNLjh7POHDUVQEJzin2Gso&callback=initMap" async defer></script>
+
+
+<script type="text/javascript" language="javascript"><!--
+
+$(document).ready(function(){
+var map;
+
+function initMap() {
+    var centerCoord = new google.maps.LatLng(53.2343512,34.366117); //dyanmic address through ajax
+    var mapOptions = {
+        zoom: 12,
+        center: centerCoord,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    map = new google.maps.Map(document.getElementById('User-Map'), mapOptions);
+}
+});
+                //--></script>
 
 
                 <script type="text/javascript" language="javascript"><!--
@@ -218,7 +276,7 @@ $('#button-cart').on('click', function() {
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 				$('.modal-body').load('index.php?route=common/cart/info .modal-list');
 
-				$('#staplesbmincart').modal();
+				$('#staplesbmincart').modal(false);
 
 			}
 		},

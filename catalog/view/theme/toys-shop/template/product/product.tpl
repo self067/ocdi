@@ -40,7 +40,7 @@
 
 
 
-                     <div class="rating1">
+                     <div class="rating">
 										 <!-- <label class="control-label"><?php echo $entry_rating; ?></label> -->
 										 <?php if ($review_status) { ?>
 
@@ -95,13 +95,13 @@
 													<div class="form-group">
 														<input type="hidden" name="quantity" value="1"  id="input-quantity"  />
 														<input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
-
 														<div class="button-group">
 														<button type="button" class="toys-cart ptoys-cart add" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" ><span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
 														</div>
-
 													</div>
-													 
+
+<!-- /////////????????????? -->
+											 
 
                         </div>
                      </div>
@@ -153,21 +153,69 @@
                                        </div>
                                        <div class="clearfix"> </div>
                                     </div>
-                                    <div class="add-review">
-                                       <h4>add a review</h4>
-                                       <form action="#" method="post">
-                                          <div class="row">
-                                             <div class="col-md-6">
-                                                <input type="text" name="Name" required="">
-                                             </div>
-                                             <div class="col-md-6">
-                                                <input type="email" name="Email" required="">
-                                             </div>
-                                          </div>
-                                          <textarea name="Message" required=""></textarea>
-                                          <input type="submit" value="SEND">
-                                       </form>
-                                    </div>
+
+
+
+
+																		<?php if ($review_status) { ?>
+																		<div class="tab-pane add-review" id="tab-review">
+
+
+																			<form class="form-horizontal" id="form-review" method="post" action="#">
+																				<div id="review"></div>
+																				<h4>add a review</h4>
+																				<?php if ($review_guest) { ?>
+
+																				<div class="form-group required">
+																					<div class="col-sm-12">
+																						<label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
+																						<input type="text" name="name" value="<?php echo $customer_name; ?>" id="input-name" class="form-control" />
+																					</div>
+																				</div>
+
+
+																				<div class="form-group required">
+																					<div class="col-sm-12">
+																						<label class="control-label" for="input-review"><?php echo $entry_review; ?></label>
+																						<textarea name="text" rows="5" id="input-review" class="form-control"></textarea>
+																						<div class="help-block"><?php echo $text_note; ?></div>
+																					</div>
+																				</div>
+
+
+																				<div class="form-group required">
+																					<div class="col-sm-12">
+																						<label class="control-label"><?php echo $entry_rating; ?></label>
+																						&nbsp;&nbsp;&nbsp; <?php echo $entry_bad; ?>&nbsp;
+																						<input type="radio" name="rating" value="1" />
+																						&nbsp;
+																						<input type="radio" name="rating" value="2" />
+																						&nbsp;
+																						<input type="radio" name="rating" value="3" />
+																						&nbsp;
+																						<input type="radio" name="rating" value="4" />
+																						&nbsp;
+																						<input type="radio" name="rating" value="5" />
+																						&nbsp;<?php echo $entry_good; ?></div>
+																				</div>
+
+																				<?php echo $captcha; ?>
+																				<div class="buttons clearfix">
+																					<div class="pull-right">
+																						<button type="button" id="button-review" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary">SEND</button>
+
+																					</div>
+																				</div>
+
+																				<?php } else { ?>
+																				<?php echo $text_login; ?>
+																				<?php } ?>
+																			</form>
+																		</div>
+																		<?php } ?>
+
+
+
                                  </div>
                               </div>
                            </div>
@@ -194,6 +242,69 @@
             </div>
          </div>
       </section>
+
+
+
+
+
+
+
+
+			<script type="text/javascript">
+$('#review').delegate('.pagination a', 'click', function(e) {
+    e.preventDefault();
+
+    $('#review').fadeOut('slow');
+
+    $('#review').load(this.href);
+
+    $('#review').fadeIn('slow');
+});
+
+$('#review').load('index.php?route=product/product/review&product_id=<?php echo $product_id; ?>');
+
+$('#button-review').on('click', function() {
+	$.ajax({
+		url: 'index.php?route=product/product/write&product_id=<?php echo $product_id; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: $("#form-review").serialize(),
+		beforeSend: function() {
+			$('#button-review').button('loading');
+		},
+		complete: function() {
+			$('#button-review').button('reset');
+		},
+		success: function(json) {
+			$('.alert-success, .alert-danger').remove();
+
+			if (json['error']) {
+				$('#review').after('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '</div>');
+			}
+
+			if (json['success']) {
+				$('#review').after('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + '</div>');
+
+				$('input[name=\'name\']').val('');
+				$('textarea[name=\'text\']').val('');
+				$('input[name=\'rating\']:checked').prop('checked', false);
+			}
+		}
+	});
+    grecaptcha.reset();
+});                                
+
+
+</script>
+
+
+
+
+
+
+
+
+
 
 
 

@@ -41,3 +41,11 @@ div#content {
 #staplesbmincart .sbmincart-submit a {
 color: #26bb48;
 }
+
+
+
+.map-info-right div#User-Map {
+    width: 100%;
+    height:24em;
+    border: 0;
+}
